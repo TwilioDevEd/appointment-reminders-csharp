@@ -23,6 +23,24 @@ namespace AppointmentReminders.Web.Controllers
 
         }
 
+        // GET: Appointments/Details/5
+
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(appointment);
+        }
+
         // GET: Appointments/Create
         public ActionResult Create()
         {
@@ -49,6 +67,7 @@ namespace AppointmentReminders.Web.Controllers
 
         // GET: Appointments/Edit/5
 
+        [HttpGet]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -64,6 +83,19 @@ namespace AppointmentReminders.Web.Controllers
 
             return View(appointment);
 
+        }
+
+        // POST: /Participants/Edit/5
+        [HttpPost]
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,PhoneNumber")] Appointment appointment)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Entry(appointment).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(appointment);
         }
     }
 }
