@@ -15,7 +15,6 @@ namespace AppointmentReminders.Web.Controllers
         private readonly AppointmentRemindersContext _context = new AppointmentRemindersContext();
 
         // GET: Appointments
-
         public async Task<ActionResult> Index()
         {
             var appointments = _context.Appointments;
@@ -25,34 +24,45 @@ namespace AppointmentReminders.Web.Controllers
         }
 
         // GET: Appointments/Create
-
         public ActionResult Create()
         {
-
             return View();
-
         }
 
         [HttpPost]
-
-        public ActionResult Create(FormCollection collection)
+        public async Task<ActionResult> Create([Bind(Include="ID,Name,PhoneNumber")]Appointment appointment)
         {
+            // TODO: Include the proper controls, add an AppointmentViewModel
+            appointment.Time = new DateTime(2015, 07, 02, 10, 11, 12);
+            appointment.CreatedAt = new DateTime(2015, 07, 02, 10, 11, 12);
 
-            return View();
+            if (ModelState.IsValid)
+            {
+                _context.Appointments.Add(appointment);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Edit", new {id = appointment.Id});
+            }
+
+            return View(appointment);
         }
 
         // GET: Appointments/Edit/5
 
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Find participant
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return HttpNotFound();
+            }
 
-            return View(new Appointment());
+            return View(appointment);
 
         }
     }

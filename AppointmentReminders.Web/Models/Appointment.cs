@@ -16,7 +16,7 @@ namespace AppointmentReminders.Web.Models
         public string Name { get; set; }
         [Display(Name = "Phone number")]
         [Required]
-        [Phone]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "The Phone number is not valid.")]
         public string PhoneNumber { get; set; }
         [Required]
         public DateTime Time { get; set; }

@@ -44,7 +44,7 @@
             @Html.DisplayFor(modelItem => item.CreatedAt)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments" }, new { @class = "btn btn-default btn-xs" })
+            @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = item.Id }, new { @class = "btn btn-default btn-xs" })
             <a class="btn btn-xs btn-danger" href="#">Delete</a>
         </td>
     </tr>
