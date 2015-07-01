@@ -23,6 +23,9 @@ namespace AppointmentReminders.Web
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/form").Include(
+            "~/Scripts/common/form.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css"));
         }
