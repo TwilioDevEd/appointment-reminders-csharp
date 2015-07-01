@@ -1,0 +1,10 @@
+﻿@using System.Web.UI.WebControls
+@model dynamic
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h1>Appointment Reminders with ASP.net MVC</h1>
+<p>This demo application will show you how to implement SMS appointment reminders with <a href="http://twilio.com" target="_blank"><span>Twilio</span></a> in ASP.net MVC.
+<p>@Html.ActionLink("Create a new Appointment", "Create", new { Controller = "Appointments" }, new { @class = "btn btn-primary btn-xs"} ) to see how it works!</p>

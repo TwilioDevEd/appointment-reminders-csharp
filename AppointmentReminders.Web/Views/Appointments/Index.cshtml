@@ -1,0 +1,55 @@
+﻿@model IEnumerable<AppointmentReminders.Web.Models.Appointment>
+
+<div class="page-header">
+    <h1>Appointments</h1>
+</div>
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Time)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Time)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedAt)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments" }, new { @class = "btn btn-default btn-xs" })
+            <a class="btn btn-xs btn-danger" href="#">Delete</a>
+        </td>
+    </tr>
+}
+
+</table>
+
+@Html.ActionLink("New", "Create", new { Controller = "Appointments" }, new { @class = "btn btn-primary" })
