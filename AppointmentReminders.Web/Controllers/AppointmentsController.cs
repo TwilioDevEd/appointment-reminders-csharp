@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AppointmentReminders.Web.Models;
@@ -10,15 +12,15 @@ namespace AppointmentReminders.Web.Controllers
 {
     public class AppointmentsController : Controller
     {
+        private readonly AppointmentRemindersContext _context = new AppointmentRemindersContext();
+
         // GET: Appointments
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var appointments = new List<Appointment>
-            {
-               new Appointment{Id = 1, Name = "Frank", PhoneNumber = "+593992670240",Time = new DateTime(), CreatedAt = new DateTime() } 
-            };
-            return View(appointments);
+            var appointments = _context.Appointments;
+
+            return View(await appointments.ToListAsync());
 
         }
 
