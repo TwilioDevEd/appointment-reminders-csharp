@@ -21,6 +21,9 @@ namespace AppointmentReminders.Web.Models
         [Required]
         public DateTime Time { get; set; }
 
+        [Required]
+        public string Timezone { get; set; }
+
         [Display(Name = "Created at")]
         public DateTime CreatedAt { get; set; }
 
