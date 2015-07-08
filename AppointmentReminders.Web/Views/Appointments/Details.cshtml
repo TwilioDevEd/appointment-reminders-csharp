@@ -15,5 +15,9 @@
 </dl>
 
 @Html.ActionLink("Back", "Index", new {Controller = "Appointments"}, new {@class = "btn btn-default"})
-@Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = Model.Id }, new { @class = "btn btn-default" })
-<a href="#" class="btn btn-danger">Delete</a>
+@Html.ActionLink("Edit","Edit", new { Controller = "Appointments", id = Model.Id }, new { @class = "btn btn-default" })
+@Html.ActionLink(
+    "Delete",
+    "Delete",
+    new { Controller = "Appointments", id = Model.Id },
+    new { @class = "btn btn-danger", onclick = "return confirm('Are you sure?');" })

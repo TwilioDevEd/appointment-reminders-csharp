@@ -58,6 +58,8 @@ namespace AppointmentReminders.Web.Controllers
         public ActionResult Create()
         {
             ViewBag.Timezones = Timezones;
+            // Use an empty appointment to setup the default
+            // values.
             var appointment = new Appointment
             {
                 Timezone = "Pacific Standard Time",
@@ -77,14 +79,13 @@ namespace AppointmentReminders.Web.Controllers
                 _context.Appointments.Add(appointment);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Edit", new {id = appointment.Id});
+                return RedirectToAction("Details", new {id = appointment.Id});
             }
 
             return View(appointment);
         }
 
         // GET: Appointments/Edit/5
-
         [HttpGet]
         public async Task<ActionResult> Edit(int? id)
         {
@@ -104,7 +105,7 @@ namespace AppointmentReminders.Web.Controllers
 
         }
 
-        // POST: /Participants/Edit/5
+        // POST: /Appointments/Edit/5
         [HttpPost]
         public async Task<ActionResult> Edit([Bind(Include = "ID,Name,PhoneNumber,Time,Timezone")] Appointment appointment)
         {
@@ -113,9 +114,19 @@ namespace AppointmentReminders.Web.Controllers
                 _context.Entry(appointment).State = EntityState.Modified;
                 _context.Entry(appointment).Property(model => model.CreatedAt).IsModified = false;
                 await _context.SaveChangesAsync();
-                return RedirectToAction("details", new { id = appointment.Id });
+                return RedirectToAction("Details", new { id = appointment.Id });
             }
             return View(appointment);
+        }
+
+        // GET: Appointments/Delete/5
+        [HttpGet]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            _context.Appointments.Remove(appointment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }

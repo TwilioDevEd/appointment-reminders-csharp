@@ -45,7 +45,11 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = item.Id }, new { @class = "btn btn-default btn-xs" })
-            <a class="btn btn-xs btn-danger" href="#">Delete</a>
+            @Html.ActionLink(
+            "Delete",
+            "Delete",
+            new { Controller = "Appointments", id = item.Id },
+            new { @class = "btn btn-danger btn-xs", onclick = "return confirm('Are you sure?');" })
         </td>
     </tr>
 }
