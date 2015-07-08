@@ -99,19 +99,21 @@ namespace AppointmentReminders.Web.Controllers
                 return HttpNotFound();
             }
 
+            ViewBag.Timezones = Timezones;
             return View(appointment);
 
         }
 
         // POST: /Participants/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,PhoneNumber")] Appointment appointment)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,PhoneNumber,Time,Timezone")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
                 _context.Entry(appointment).State = EntityState.Modified;
+                _context.Entry(appointment).Property(model => model.CreatedAt).IsModified = false;
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("details", new { id = appointment.Id });
             }
             return View(appointment);
         }
