@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using AppointmentReminders.Web.Models;
 
@@ -33,7 +31,6 @@ namespace AppointmentReminders.Web.Controllers
             var appointments = _context.Appointments;
 
             return View(await appointments.ToListAsync());
-
         }
 
         // GET: Appointments/Details/5
@@ -102,7 +99,6 @@ namespace AppointmentReminders.Web.Controllers
 
             ViewBag.Timezones = Timezones;
             return View(appointment);
-
         }
 
         // POST: /Appointments/Edit/5
