@@ -14,6 +14,19 @@ namespace AppointmentReminders.Web.Controllers
     {
         private readonly AppointmentRemindersContext _context = new AppointmentRemindersContext();
 
+        public SelectListItem[] Timezones
+        {
+            get
+            {
+                var systemTimeZones = TimeZoneInfo.GetSystemTimeZones();
+                return systemTimeZones.Select(systemTimeZone => new SelectListItem
+                {
+                    Text = systemTimeZone.DisplayName,
+                    Value = systemTimeZone.Id
+                }).ToArray();
+            }
+        }
+
         // GET: Appointments
         public async Task<ActionResult> Index()
         {
@@ -44,11 +57,14 @@ namespace AppointmentReminders.Web.Controllers
         // GET: Appointments/Create
         public ActionResult Create()
         {
-            return View();
+            ViewBag.Timezones = Timezones;
+            var appointment = new Appointment {Timezone = "Pacific Standard Time"};
+
+            return View(appointment);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([Bind(Include="ID,Name,PhoneNumber")]Appointment appointment)
+        public async Task<ActionResult> Create([Bind(Include="ID,Name,PhoneNumber,Timezone")]Appointment appointment)
         {
             // TODO: Include the proper controls, add an AppointmentViewModel
             appointment.Time = new DateTime(2015, 07, 02, 10, 11, 12);
