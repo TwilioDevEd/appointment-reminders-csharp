@@ -26,6 +26,11 @@ namespace AppointmentReminders.Web
             bundles.Add(new ScriptBundle("~/bundles/form").Include(
             "~/Scripts/common/form.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datetime").Include(
+            "~/Scripts/moment*",
+            "~/Scripts/bootstrap-datetimepicker*",
+            "~/Scripts/common/datetimepicker-init.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css"));
         }
