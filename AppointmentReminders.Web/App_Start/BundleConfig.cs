@@ -33,6 +33,9 @@ namespace AppointmentReminders.Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css"));
+
+            bundles.Add(new StyleBundle("~/Content/datetime").Include(
+                      "~/Content/bootstrap-datetimepicker*"));
         }
     }
 }
