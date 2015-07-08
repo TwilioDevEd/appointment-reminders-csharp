@@ -258,6 +258,7 @@
     <Content Include="Views\Appointments\Index.cshtml" />
     <Content Include="Views\Appointments\Edit.cshtml" />
     <Content Include="Views\Appointments\Details.cshtml" />
+    <Content Include="Views\Appointments\_Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
