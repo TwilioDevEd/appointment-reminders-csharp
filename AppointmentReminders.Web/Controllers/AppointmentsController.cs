@@ -58,17 +58,19 @@ namespace AppointmentReminders.Web.Controllers
         public ActionResult Create()
         {
             ViewBag.Timezones = Timezones;
-            var appointment = new Appointment {Timezone = "Pacific Standard Time"};
+            var appointment = new Appointment
+            {
+                Timezone = "Pacific Standard Time",
+                Time = DateTime.Now
+            };
 
             return View(appointment);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([Bind(Include="ID,Name,PhoneNumber,Timezone")]Appointment appointment)
+        public async Task<ActionResult> Create([Bind(Include="ID,Name,PhoneNumber,Time,Timezone")]Appointment appointment)
         {
-            // TODO: Include the proper controls, add an AppointmentViewModel
-            appointment.Time = new DateTime(2015, 07, 02, 10, 11, 12);
-            appointment.CreatedAt = new DateTime(2015, 07, 02, 10, 11, 12);
+            appointment.CreatedAt = DateTime.Now;
 
             if (ModelState.IsValid)
             {

@@ -26,9 +26,7 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class='input-group date' id="datetimepicker">
-                        @* START: Replace with an ASP.NET helper *@
-                        <input type='text' class="form-control"/>
-                        @* END: Replace with an ASP.NET helper *@
+                        @Html.TextBoxFor(x => x.Time, new {@class = "form-control"})
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
