@@ -11,7 +11,7 @@ namespace AppointmentReminders.Web
         public void Configuration(IAppBuilder app)
         {
             GlobalConfiguration.Configuration
-                .UseSqlServerStorage("AppointmentReminders");
+                .UseSqlServerStorage("DefaultConnection");
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
