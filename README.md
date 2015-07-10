@@ -1,3 +1,6 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/sby8a4gydo9nlnav?svg=true)](https://ci.appveyor.com/project/acamino/appointment-reminders-csharp)
+
+
 ## Apointment Reminders in ASP.NET MVC
 
 This example demonstrates how to use Twilio to create automatic appointment reminders for your business users.
