@@ -141,6 +141,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AppointmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Domain\AppointmentsFinder.cs" />
     <Compile Include="Domain\AppointmentsNotificationPolicy.cs" />
     <Compile Include="Workers\SendNotificationsJob.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />

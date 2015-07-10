@@ -1,16 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Configuration;
+﻿using System.Web.Configuration;
 using AppointmentReminders.Web.Domain;
-using AppointmentReminders.Web.Models;
 using Twilio;
 
 namespace AppointmentReminders.Web.Workers
 {
     public class SendNotificationsJob
     {
-        private readonly AppointmentRemindersContext _context = new AppointmentRemindersContext();
-
         public TwilioRestClient TwilioClient
         {
             get
@@ -27,30 +22,22 @@ namespace AppointmentReminders.Web.Workers
             const string messageTemplate =
                 "Hi {0}. Just a reminder that you have an appointment coming up at {1}.";
 
-            var appointments = GetAppointments();
+            var availableAppointments = AppointmentsFinder.GetAvailableAppointments();
 
-            if (appointments.Count == 0)
+            if (availableAppointments.Count == 0)
             {
                 return;
             }
 
             var twilioNumber = WebConfigurationManager.AppSettings["TwilioNumber"];
 
-            foreach (var appointment in appointments)
+            foreach (var appointment in availableAppointments)
             {
                 TwilioClient.SendSmsMessage(
-                    twilioNumber,
-                    appointment.PhoneNumber,
-                    string.Format(messageTemplate, appointment.Name, appointment.Time));
+                twilioNumber,
+                appointment.PhoneNumber,
+                string.Format(messageTemplate, appointment.Name, appointment.Time.ToString("t")));
             }
-        }
-
-        public IList<Appointment> GetAppointments()
-        {
-            var availableAppointments = _context.Appointments.Where(
-                appointment => AppointmentsNotificationPolicy.NeedsToBeSent(appointment));
-
-            return availableAppointments.ToList();
         }
     }
 }

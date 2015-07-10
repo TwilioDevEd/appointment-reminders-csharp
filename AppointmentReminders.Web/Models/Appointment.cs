@@ -16,7 +16,7 @@ namespace AppointmentReminders.Web.Models
         public string PhoneNumber { get; set; }
 
         [Required]
-        public DateTime? Time { get; set; }
+        public DateTime Time { get; set; }
 
         [Required]
         public string Timezone { get; set; }
