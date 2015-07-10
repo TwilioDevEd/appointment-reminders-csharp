@@ -10,11 +10,8 @@ namespace AppointmentReminders.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            GlobalConfiguration.Configuration
-                .UseSqlServerStorage("DefaultConnection");
-
-            app.UseHangfireDashboard();
-            app.UseHangfireServer();
+            Hangfire.ConfigureHangfire(app);
+            Hangfire.InitializeJobs();
         }
     }
 }
