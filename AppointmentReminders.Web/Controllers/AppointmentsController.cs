@@ -97,46 +97,9 @@ namespace AppointmentReminders.Web.Controllers
             return View(appointment);
         }
 
-        public void RemindAppointments()
-        {
-            const string messageTemplate =
-                "Hi {0}. Just a reminder that you have an appointment coming up at {1}.";
 
-            var appointments = GetAppointments();
 
-            if (appointments.Count == 0)
-            {
-                return;
-            }
 
-            var twilioNumber = WebConfigurationManager.AppSettings["TwilioNumber"];
-            var accountSid = WebConfigurationManager.AppSettings["AccountSid"];
-            var authToken = WebConfigurationManager.AppSettings["AuthToken"];
-
-            var twilio = new Twilio.TwilioRestClient(accountSid, authToken);
-
-            foreach (var appointment in appointments)
-            {
-                twilio.SendSmsMessage(
-                    twilioNumber,
-                    appointment.PhoneNumber,
-                    string.Format(messageTemplate, appointment.Name, appointment.Time));
-            }
-        }
-
-        public IList<Appointment> GetAppointments()
-        {
-
-            var appointments = _context.Appointments;
-
-            var availableAppointments = appointments.Where(
-                appointment => AppointmentsNotificationPolicy.NeedsToBeSent(appointment));
-            // Add the conditions to get the right appointments.
-            // Get the appointments using the converted local time.
-            return availableAppointments.ToList();
-        }
-
-        
         // GET: Appointments/Edit/5
         [HttpGet]
         public async Task<ActionResult> Edit(int? id)
@@ -179,17 +142,40 @@ namespace AppointmentReminders.Web.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-    }
 
-    // Move it to a separate file.
-    public class AppointmentsNotificationPolicy
-    {
-        public static bool NeedsToBeSent(Appointment appointment)
+        public void RemindAppointments()
         {
-            var currentTime = DateTime.Now;
-            var localTime = appointment.Time.ToLocalTime(appointment.Timezone);
+            const string messageTemplate =
+                "Hi {0}. Just a reminder that you have an appointment coming up at {1}.";
 
-            return currentTime.ToString("MM/dd/yyyy HH:mm") == localTime.ToString("MM/dd/yyyy HH:mm");
+            var appointments = GetAppointments();
+
+            if (appointments.Count == 0)
+            {
+                return;
+            }
+
+            var twilioNumber = WebConfigurationManager.AppSettings["TwilioNumber"];
+            var accountSid = WebConfigurationManager.AppSettings["AccountSid"];
+            var authToken = WebConfigurationManager.AppSettings["AuthToken"];
+
+            var twilio = new Twilio.TwilioRestClient(accountSid, authToken);
+
+            foreach (var appointment in appointments)
+            {
+                twilio.SendSmsMessage(
+                    twilioNumber,
+                    appointment.PhoneNumber,
+                    string.Format(messageTemplate, appointment.Name, appointment.Time));
+            }
+        }
+
+        public IList<Appointment> GetAppointments()
+        {
+            var availableAppointments = _context.Appointments.Where(
+                appointment => Domain.AppointmentsNotificationPolicy.NeedsToBeSent(appointment));
+
+            return availableAppointments.ToList();
         }
     }
 }
