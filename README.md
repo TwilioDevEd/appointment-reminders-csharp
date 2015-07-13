@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/sby8a4gydo9nlnav?svg=true)](https://ci.appveyor.com/project/acamino/appointment-reminders-csharp)
+[![Build status](https://ci.appveyor.com/api/projects/status/qd3q5801n57givny?svg=true)](https://ci.appveyor.com/project/acamino/appointment-reminders-csharp)
 
 
 ## Apointment Reminders in ASP.NET MVC
