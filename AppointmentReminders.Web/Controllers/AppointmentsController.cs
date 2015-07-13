@@ -35,7 +35,7 @@ namespace AppointmentReminders.Web.Controllers
         public ActionResult Index()
         {
             var appointments = _repository.FindAll();
-            return View();
+            return View(appointments);
         }
 
         // GET: Appointments/Details/5

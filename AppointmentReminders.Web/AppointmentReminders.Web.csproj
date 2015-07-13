@@ -143,6 +143,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Domain\AppointmentsFinder.cs" />
     <Compile Include="Domain\AppointmentsNotificationPolicy.cs" />
+    <Compile Include="Models\Repository\AppointmentRepository.cs" />
+    <Compile Include="Models\Repository\IAppointmentRepository.cs" />
     <Compile Include="Workers\SendNotificationsJob.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Global.asax.cs">
