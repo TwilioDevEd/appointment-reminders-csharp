@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using System.Web.Configuration;
 using System.Web.Mvc;
-using AppointmentReminders.Web.Extensions;
 using AppointmentReminders.Web.Models;
-using Hangfire;
-using Microsoft.Ajax.Utilities;
-using WebGrease.Css.Extensions;
+using AppointmentReminders.Web.Models.Repository;
 
 namespace AppointmentReminders.Web.Controllers
 {
     public class AppointmentsController : Controller
     {
-        private readonly AppointmentRemindersContext _context = new AppointmentRemindersContext();
+        private readonly IAppointmentRepository _repository;
+
+        public AppointmentsController() : this(new AppointmentRepository()) { }
+
+        public AppointmentsController(IAppointmentRepository repository)
+        {
+            _repository = repository;
+        }
 
         public SelectListItem[] Timezones
         {
@@ -34,25 +32,21 @@ namespace AppointmentReminders.Web.Controllers
         }
 
         // GET: Appointments
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            var appointments = _context.Appointments;
-
-            return View(await appointments.ToListAsync());
+            var appointments = _repository.FindAll();
+            return View();
         }
 
-        
-
         // GET: Appointments/Details/5
-
-        public async Task<ActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var appointment = await _context.Appointments.FindAsync(id);
+            var appointment = _repository.FindById(id.Value);
             if (appointment == null)
             {
                 return HttpNotFound();
@@ -77,14 +71,13 @@ namespace AppointmentReminders.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([Bind(Include="ID,Name,PhoneNumber,Time,Timezone")]Appointment appointment)
+        public ActionResult Create([Bind(Include="ID,Name,PhoneNumber,Time,Timezone")]Appointment appointment)
         {
             appointment.CreatedAt = DateTime.Now;
 
             if (ModelState.IsValid)
             {
-                _context.Appointments.Add(appointment);
-                await _context.SaveChangesAsync();
+                _repository.Create(appointment);
 
                 return RedirectToAction("Details", new {id = appointment.Id});
             }
@@ -92,19 +85,16 @@ namespace AppointmentReminders.Web.Controllers
             return View(appointment);
         }
 
-
-
-
         // GET: Appointments/Edit/5
         [HttpGet]
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var appointment = await _context.Appointments.FindAsync(id);
+            var appointment = _repository.FindById(id.Value);
             if (appointment == null)
             {
                 return HttpNotFound();
@@ -116,13 +106,11 @@ namespace AppointmentReminders.Web.Controllers
 
         // POST: /Appointments/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,PhoneNumber,Time,Timezone")] Appointment appointment)
+        public ActionResult Edit([Bind(Include = "ID,Name,PhoneNumber,Time,Timezone")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
-                _context.Entry(appointment).State = EntityState.Modified;
-                _context.Entry(appointment).Property(model => model.CreatedAt).IsModified = false;
-                await _context.SaveChangesAsync();
+                _repository.Update(appointment);
                 return RedirectToAction("Details", new { id = appointment.Id });
             }
             return View(appointment);
@@ -130,11 +118,9 @@ namespace AppointmentReminders.Web.Controllers
 
         // GET: Appointments/Delete/5
         [HttpGet]
-        public async Task<ActionResult> Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var appointment = await _context.Appointments.FindAsync(id);
-            _context.Appointments.Remove(appointment);
-            await _context.SaveChangesAsync();
+            _repository.Delete(id);
             return RedirectToAction("Index");
         }
     }
