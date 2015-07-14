@@ -17,9 +17,10 @@ namespace Appointments.Web.Tests.Model
 
         public void Update(Appointment appointment)
         {
-            if (_db.Any(x => x.Id != appointment.Id))
+
+            if (_db.Any(x => x.Id == appointment.Id))
             {
-                _db.Remove(appointment);
+                _db.Remove(FindById(appointment.Id));
                 _db.Add(appointment);    
             }
         }
