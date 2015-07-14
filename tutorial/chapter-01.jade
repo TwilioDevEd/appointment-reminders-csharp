@@ -43,3 +43,20 @@
     * A persistent `Appointment` model object to store information about the user 
 
     Let's start by looking at the model, where we decide what information we want to store with the appointment.
+
+.step(data-title='Appointment Model')
+  :markdown
+    ## Appointment Model
+
+    The appointment model is pretty simple out of the box, but since humans will be interacting with it let's make sure we add some data validation.
+
+    *Data Validation*
+
+    Validations are important since we want to make sure only accurate data is being saved into our database. In this case, we only want to validate that all of our required fields are present. We can do this by creating a `validates` statement with `presence: true`.
+
+    It is likely that our Appointment Model would be created by an admin person at the site of the appointment. Well it would be great if we could give our admin user some feedback when they create the appointment. Luckily in Rails if we add validations to our models we get error reporting for free with the session's `flash` object.
+
+    One note: in order to run this demo you would need to run `rake db:migrate` which would run the migrations in our db/migrate folder. For this tutorial we're gonna focus on the core concepts but if you want to learn more about migrations you can read the [Rails guide](http://edgeguides.rubyonrails.org/active_record_migrations.html) on the subject.
+
+    Now we're ready to move up to the controller level of the application, starting with the HTTP request routes we'll need.
+
