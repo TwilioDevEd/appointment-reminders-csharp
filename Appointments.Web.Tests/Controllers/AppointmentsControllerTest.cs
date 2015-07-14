@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -16,13 +15,13 @@ namespace Appointments.Web.Tests.Controllers
         [Test]
         public void Index_returns_a_list_of_the_existing_appointments()
         {
-            var respository = new InMemoryAppointmentRepository();
-            respository.Create(new Appointment {Name = "John", PhoneNumber = "1234"});
-            respository.Create(new Appointment {Name = "Jane", PhoneNumber = "2345"});
-            var controller = GetAppointmentsController(respository);
+            var repository = new InMemoryAppointmentRepository();
+            repository.Create(MakeAppointment(1, "John"));
+            repository.Create(MakeAppointment(2, "Jane"));
+            var controller = GetAppointmentsController(repository);
             var result = controller.Index() as ViewResult;
 
-            Assert.That(result.ViewData.Model, Is.EqualTo(respository.FindAll()));
+            Assert.That(result.ViewData.Model, Is.EqualTo(repository.FindAll()));
         }
 
         [Test]
@@ -31,7 +30,7 @@ namespace Appointments.Web.Tests.Controllers
             var controller = GetAppointmentsController(new InMemoryAppointmentRepository());
             controller.ModelState.AddModelError("", "Name is required");
 
-            var appointment = new Appointment {Name = "John", PhoneNumber = "1234"};
+            var appointment = MakeAppointment();
             var result = controller.Create(appointment) as ViewResult;
 
             Assert.That(result.ViewName, Is.EqualTo("Create"));
@@ -43,7 +42,7 @@ namespace Appointments.Web.Tests.Controllers
             var repository = new InMemoryAppointmentRepository();
             var controller = GetAppointmentsController(repository);
 
-            var appointment = new Appointment { Name = "John", PhoneNumber = "1234" };
+            var appointment = MakeAppointment();
             controller.Create(appointment);
 
             var appointments = repository.FindAll();
@@ -55,17 +54,41 @@ namespace Appointments.Web.Tests.Controllers
         public void Create_Appointment_redirects_to_details_view_on_success()
         {
             var controller = GetAppointmentsController(new InMemoryAppointmentRepository());
-            var appointment = new Appointment { Name = "John", PhoneNumber = "1234" };
+            var appointment = MakeAppointment();
 
             var result = (RedirectToRouteResult)controller.Create(appointment);
 
-            Assert.AreEqual("Details", result.RouteValues["action"]);
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
         }
+
+        [Test]
+        public void Update_Appointment_updates_an_appointment_on_repository()
+        {
+            var repository = new InMemoryAppointmentRepository();
+            repository.Create(MakeAppointment(1, "John"));
+
+            var controller = GetAppointmentsController(repository);
+            controller.Edit(MakeAppointment(1, "Charles"));
+
+            Assert.That(repository.FindById(1).Name, Is.EqualTo("Charles"));
+        }
+
+        [Test]
+        public void Update_Appointment_redirects_to_details_view_on_success()
+        {
+            var controller = GetAppointmentsController(new InMemoryAppointmentRepository());
+            var appointment = MakeAppointment();
+
+            var result = (RedirectToRouteResult)controller.Create(appointment);
+
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
+        }
+
 
         [Test]
         public void Delete_Appointment_removes_an_appointment_from_repository()
         {
-            var appointment = new Appointment {Id = 1, Name = "John"};
+            var appointment = MakeAppointment();
 
             var repository = new InMemoryAppointmentRepository();
             repository.Create(appointment);
@@ -79,7 +102,7 @@ namespace Appointments.Web.Tests.Controllers
         [Test]
         public void Delete_Appointment_redirects_to_index_view_on_success()
         {
-            var appointment = new Appointment { Id = 1, Name = "John" };
+            var appointment = MakeAppointment();
 
             var repository = new InMemoryAppointmentRepository();
             repository.Create(appointment);
@@ -87,7 +110,7 @@ namespace Appointments.Web.Tests.Controllers
             var controller = GetAppointmentsController(new InMemoryAppointmentRepository());
             var result = (RedirectToRouteResult)controller.Delete(appointment.Id);
 
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Index"));
         }
 
         private static AppointmentsController GetAppointmentsController(IAppointmentRepository repository)
@@ -101,6 +124,16 @@ namespace Appointments.Web.Tests.Controllers
             };
 
             return controller;
+        }
+
+        private static Appointment MakeAppointment()
+        {
+            return new Appointment {Id = 1, Name = "John", PhoneNumber = "1234"};
+        }
+
+        private static Appointment MakeAppointment(int id, string name)
+        {
+            return new Appointment { Id = id, Name = name, PhoneNumber = "1234" };
         }
 
         private class MockHttpContext : HttpContextBase
