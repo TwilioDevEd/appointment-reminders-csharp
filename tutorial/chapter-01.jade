@@ -1,0 +1,45 @@
+.step(data-title='Introduction')
+  :markdown
+    ## How It Works
+
+    Ready to implement appointment reminders in your application? Here's how it works at a high level:
+
+      1. An administrator creates an appointment for a future date and time, and stores a customer's phone number in the database for that appointment
+      1. A background process checks the database on a regular interval, looking for appointments that require a reminder to be sent out
+      1. At a configured time in advance of the appointment, an SMS reminder is sent out to the customer to remind them of their appointment
+
+    ## Building Blocks
+
+    Here are the technologies we'll use to get this done:
+
+    * [ASP.NET MVC](http://www.asp.net/mvc) to create a database-driven web application
+    * [The Messages Resource](/docs/api/rest/sending-sms) from Twilio's REST API to send text messages
+    * [Hangfire](http://hangfire.io/) to help us schedule and execute background tasks on a recurring basis
+
+    ## How To Read This Tutorial
+
+    To implement appointment reminders, we will be working through a series of [user stories](http://en.wikipedia.org/wiki/User_story) that describe how to fully implement appointment reminders in a web application. We'll walk through the code required to satisfy each story, and explore what we needed to add at each step.
+
+    Let's get started! Click the right arrow to move on to the next step of the tutorial.
+
+.step(data-title="About This Tutorial")
+  :markdown
+    ## About This Tutorial
+
+    In this tutorial, we will be working through a series of [user stories](http://en.wikipedia.org/wiki/User_story) that describe how to fully implement account verification in a web application. Our team implemented this example application in about 12 story points (roughly equivalent to 12 working hours).
+
+    Let's get started with our first user story around creating a new user account.
+
+.step(data-title='The User Story')
+  h2 Creating an Appointment
+  blockquote
+    | As a user, I want to create an appointment with a name, guest phone numbers, and a time in the future.
+  :markdown
+    In order to build an automated appointment reminder app, we probably should start with an appointment. This story requires that we create a bit of UI and a model object to create and save a new `Appointment` in our system. At a high level, here's what we will need to add:
+
+    * A form to enter details about the appointment
+    * A route and controller function on the server to render the form 
+    * A route and controller function on the server to handle the form POST request
+    * A persistent `Appointment` model object to store information about the user 
+
+    Let's start by looking at the model, where we decide what information we want to store with the appointment.
