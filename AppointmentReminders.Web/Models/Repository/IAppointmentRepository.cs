@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AppointmentReminders.Web.Models.Repository
 {
@@ -13,6 +9,5 @@ namespace AppointmentReminders.Web.Models.Repository
         void Delete(int id);
         Appointment FindById(int id);
         IEnumerable<Appointment> FindAll();
-        int SaveChanges();
     }
 }

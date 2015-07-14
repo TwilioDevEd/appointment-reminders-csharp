@@ -38,10 +38,5 @@ namespace Appointments.Web.Tests.Model
         {
             return _db.ToList();
         }
-
-        public int SaveChanges()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

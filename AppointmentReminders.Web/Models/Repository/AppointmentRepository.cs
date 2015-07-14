@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 namespace AppointmentReminders.Web.Models.Repository
 {
@@ -38,11 +36,6 @@ namespace AppointmentReminders.Web.Models.Repository
         public IEnumerable<Appointment> FindAll()
         {
             return  _context.Appointments.ToList();
-        }
-
-        public int SaveChanges()
-        {
-            return _context.SaveChanges();
         }
     }
 }
