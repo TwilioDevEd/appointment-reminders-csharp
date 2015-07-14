@@ -73,6 +73,7 @@ namespace AppointmentReminders.Web.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include="ID,Name,PhoneNumber,Time,Timezone")]Appointment appointment)
         {
+            ViewData["Name"] = "Create";
             appointment.CreatedAt = DateTime.Now;
 
             if (ModelState.IsValid)
