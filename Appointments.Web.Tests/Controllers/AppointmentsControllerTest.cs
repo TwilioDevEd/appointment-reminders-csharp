@@ -12,7 +12,7 @@ namespace Appointments.Web.Tests.Controllers
 {
     public class AppointmentsControllerTest
     {
-        [TestCase]
+        [Test]
         public void Index_returns_a_list_of_the_existing_appointments()
         {
             var respository = new InMemoryAppointmentRepository();
@@ -24,7 +24,7 @@ namespace Appointments.Web.Tests.Controllers
             Assert.That(result.ViewData.Model, Is.EqualTo(respository.FindAll()));
         }
 
-        [TestCase]
+        [Test]
         public void Create_Appointment_returns_view_if_the_model_is_invalid()
         {
             var controller = GetAppointmentsController(new InMemoryAppointmentRepository());
@@ -36,7 +36,7 @@ namespace Appointments.Web.Tests.Controllers
             Assert.That(result.ViewName, Is.EqualTo("Create"));
         }
 
-        [TestCase]
+        [Test]
         public void Create_Appointment_creates_an_appointment_when_the_model_is_valid()
         {
             var repository = new InMemoryAppointmentRepository();
@@ -48,6 +48,17 @@ namespace Appointments.Web.Tests.Controllers
             var appointments = repository.FindAll();
 
             Assert.That(appointments, Contains.Item(appointment));
+        }
+
+        [Test]
+        public void Create_Appointment_redirects_to_details_view_on_success()
+        {
+            var controller = GetAppointmentsController(new InMemoryAppointmentRepository());
+            var appointment = new Appointment { Name = "John", PhoneNumber = "1234" };
+
+            var result = (RedirectToRouteResult)controller.Create(appointment);
+
+            Assert.AreEqual("Details", result.RouteValues["action"]);
         }
 
         private static AppointmentsController GetAppointmentsController(IAppointmentRepository repository)

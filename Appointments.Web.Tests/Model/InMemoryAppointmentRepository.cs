@@ -9,6 +9,7 @@ namespace Appointments.Web.Tests.Model
     public class InMemoryAppointmentRepository : IAppointmentRepository
     {
         private readonly IList<Appointment> _db = new List<Appointment>();
+
         public void Create(Appointment appointment)
         {
             _db.Add(appointment);

@@ -73,7 +73,6 @@ namespace AppointmentReminders.Web.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include="ID,Name,PhoneNumber,Time,Timezone")]Appointment appointment)
         {
-            ViewData["Name"] = "Create";
             appointment.CreatedAt = DateTime.Now;
 
             if (ModelState.IsValid)
@@ -83,7 +82,7 @@ namespace AppointmentReminders.Web.Controllers
                 return RedirectToAction("Details", new {id = appointment.Id});
             }
 
-            return View(appointment);
+            return View("Create", appointment);
         }
 
         // GET: Appointments/Edit/5
