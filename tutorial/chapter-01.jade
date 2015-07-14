@@ -73,3 +73,19 @@
 
     Now we're ready to move up to the controller level of the application.
 
+
+.step(data-title='New Appointment Form',
+  data-file='AppointmentReminders.Web/Views/Appointments/_Form.cshtml',
+  data-highlight='6-7',
+  data-mode='html')
+  :markdown
+    ## New Appointment Form
+
+    When we create a new appointment, we need a guest name, a phone number and a
+    time. By using [HTML Helper
+    classes](https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx)
+    we can bind the form to the model object. This will generate the necessary
+    html markup that will create a new Appointment on submit.
+
+    Let's point out one specific helper class that ASP.NET MVC gives us for
+    model-bound forms.
