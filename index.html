@@ -37,13 +37,27 @@
 <li>A persistent <code>Appointment</code> model object to store information about the user </li>
 </ul>
 <p>Let&#39;s start by looking at the model, where we decide what information we want to store with the appointment.</p>
-</div><div data-title="Appointment Model" class="step"><h2 id="appointment-model">Appointment Model</h2>
+</div><div data-title="Appointment Model" data-file="AppointmentReminders.Web/Models/Appointment.cs" class="step"><h2 id="appointment-model">Appointment Model</h2>
 <p>The appointment model is pretty simple out of the box, but since humans will be interacting with it let&#39;s make sure we add some data validation.</p>
 <p><em>Data Validation</em></p>
-<p>Validations are important since we want to make sure only accurate data is being saved into our database. In this case, we only want to validate that all of our required fields are present. We can do this by creating a <code>validates</code> statement with <code>presence: true</code>.</p>
-<p>It is likely that our Appointment Model would be created by an admin person at the site of the appointment. Well it would be great if we could give our admin user some feedback when they create the appointment. Luckily in Rails if we add validations to our models we get error reporting for free with the session&#39;s <code>flash</code> object.</p>
-<p>One note: in order to run this demo you would need to run <code>rake db:migrate</code> which would run the migrations in our db/migrate folder. For this tutorial we&#39;re gonna focus on the core concepts but if you want to learn more about migrations you can read the <a href="http://edgeguides.rubyonrails.org/active_record_migrations.html">Rails guide</a> on the subject.</p>
-<p>Now we&#39;re ready to move up to the controller level of the application, starting with the HTTP request routes we&#39;ll need.</p>
+<p>Validations are important since we want to make sure only accurate data is
+being saved into our database. In this case, we only want to validate that
+all of our required fields are present. We can do this by using <code>[Required]</code>
+data annotation.</p>
+<p>It is likely that our Appointment Model would be created by an admin person
+at the site of the appointment. Well it would be great if we could give our
+admin user some feedback when they create the appointment. In ASP.NET MVC we
+can take advantage of the built-in validation, if there are errores those
+will be displayed in the form.</p>
+<p>One note: in order to run this demo you would need to run <code>Update-Database</code>
+which would run the migrations in our AppointmentReminders.Web/Migrations
+folderAppointmentReminders.Web. For this tutorial we&#39;re gonna focus on the
+core concepts but if you want to learn more about migrations you can read
+the <a href="http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application">ASP.NET MVC
+guide</a>
+on the subject.</p>
+<p>Now we&#39;re ready to move up to the controller level of the application.</p>
 </div></div>
-<div class="saurus-files" style="display:none;"></div>
+<div class="saurus-files" style="display:none;"><textarea class="saurus-file" data-file="AppointmentReminders.Web/Models/Appointment.cs" data-mode="csharp">77u/dXNpbmcgU3lzdGVtOwp1c2luZyBTeXN0ZW0uQ29tcG9uZW50TW9kZWwuRGF0YUFubm90YXRpb25zOwp1c2luZyBNaWNyb3NvZnQuQWpheC5VdGlsaXRpZXM7CgpuYW1lc3BhY2UgQXBwb2ludG1lbnRSZW1pbmRlcnMuV2ViLk1vZGVscwp7CiAgICBwdWJsaWMgY2xhc3MgQXBwb2ludG1lbnQKICAgIHsKICAgICAgICBwdWJsaWMgc3RhdGljIGludCBSZW1pbmRlclRpbWUgPSAzMDsKICAgICAgICBwdWJsaWMgaW50IElkIHsgZ2V0OyBzZXQ7IH0KCiAgICAgICAgW1JlcXVpcmVkXQogICAgICAgIHB1YmxpYyBzdHJpbmcgTmFtZSB7IGdldDsgc2V0OyB9CgogICAgICAgIFtSZXF1aXJlZCwgUGhvbmUsIERpc3BsYXkoTmFtZSA9ICJQaG9uZSBudW1iZXIiKV0KICAgICAgICBwdWJsaWMgc3RyaW5nIFBob25lTnVtYmVyIHsgZ2V0OyBzZXQ7IH0KCiAgICAgICAgW1JlcXVpcmVkXQogICAgICAgIHB1YmxpYyBEYXRlVGltZSBUaW1lIHsgZ2V0OyBzZXQ7IH0KCiAgICAgICAgW1JlcXVpcmVkXQogICAgICAgIHB1YmxpYyBzdHJpbmcgVGltZXpvbmUgeyBnZXQ7IHNldDsgfQoKICAgICAgICBbRGlzcGxheShOYW1lID0gIkNyZWF0ZWQgYXQiKV0KICAgICAgICBwdWJsaWMgRGF0ZVRpbWUgQ3JlYXRlZEF0IHsgZ2V0OyBzZXQ7IH0KICAgIH0KfQ==</textarea>
+</div>
 </div><div class="saurus-overview"><ul></ul></div></div><div class="saurus-code"><div class="file-path"><span class="crumb-container"></span><i class="fa fa-fw fa-folder"></i></div><div class="saurus-editor"></div></div><div class="saurus-explorer"><div class="saurus-file-list"></div></div></div></div></div><script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script><script src="ace/ace.js"></script><script src="ace/theme-monokai.js"></script><script src="viewsaurus.js"></script></body></html>
