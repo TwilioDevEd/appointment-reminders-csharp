@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System.Diagnostics.Contracts;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -59,6 +60,34 @@ namespace Appointments.Web.Tests.Controllers
             var result = (RedirectToRouteResult)controller.Create(appointment);
 
             Assert.AreEqual("Details", result.RouteValues["action"]);
+        }
+
+        [Test]
+        public void Delete_Appointment_removes_an_appointment_from_repository()
+        {
+            var appointment = new Appointment {Id = 1, Name = "John"};
+
+            var repository = new InMemoryAppointmentRepository();
+            repository.Create(appointment);
+
+            var controller = GetAppointmentsController(repository);
+            controller.Delete(appointment.Id);
+
+            Assert.That(repository.FindAll(), !Contains.Item(appointment));
+        }
+
+        [Test]
+        public void Delete_Appointment_redirects_to_index_view_on_success()
+        {
+            var appointment = new Appointment { Id = 1, Name = "John" };
+
+            var repository = new InMemoryAppointmentRepository();
+            repository.Create(appointment);
+
+            var controller = GetAppointmentsController(new InMemoryAppointmentRepository());
+            var result = (RedirectToRouteResult)controller.Delete(appointment.Id);
+
+            Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
         private static AppointmentsController GetAppointmentsController(IAppointmentRepository repository)
