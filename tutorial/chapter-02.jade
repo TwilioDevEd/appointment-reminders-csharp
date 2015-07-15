@@ -44,4 +44,13 @@ data-mode="html")
 
     In this controller we need to pull up an appointment record and then delete it. Let's take a look at how we're grabbing the appointment first.
 
-    There is some standard check going over here, if there is not an ID to look for, then the controller responds `Bad Request`, in the other hand if an ID is passed but it doesn't match with any of the appointments in the dabase then the controller responds `Not Found`.
+    There is some standard check going over here, if there is not an ID to look for, then the controller responds `Bad Request`, in the other hand if an ID is passed but it doesn't match with any of the appointments in the database then the controller responds `Not Found`.
+
+.step(data-title='Deleting an Appointment', data-file='AppointmentReminders.Web/Controllers/AppointmentsController.cs', data-highlight="121-125")
+  :markdown
+    ## Deleting an Appointment
+
+    Now that we have the appointment, we simply need to call `Delete` on it.
+
+    Now that we can interact with our appointments, let's dive into sending out reminders when one of these appointments is coming up.
+
