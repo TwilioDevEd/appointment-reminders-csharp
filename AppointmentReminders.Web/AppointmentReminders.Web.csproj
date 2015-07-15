@@ -147,7 +147,6 @@
     <Compile Include="Models\Repository\AppointmentRepository.cs" />
     <Compile Include="Models\Repository\IAppointmentRepository.cs" />
     <Compile Include="Workers\SendNotificationsJob.cs" />
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
