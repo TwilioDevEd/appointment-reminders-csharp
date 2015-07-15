@@ -1,5 +1,7 @@
-﻿using System.Web.Configuration;
+﻿using System;
+using System.Web.Configuration;
 using AppointmentReminders.Web.Domain;
+using AppointmentReminders.Web.Models.Repository;
 using Twilio;
 
 namespace AppointmentReminders.Web.Workers
@@ -22,7 +24,7 @@ namespace AppointmentReminders.Web.Workers
             const string messageTemplate =
                 "Hi {0}. Just a reminder that you have an appointment coming up at {1}.";
 
-            var availableAppointments = AppointmentsFinder.GetAvailableAppointments();
+            var availableAppointments = AppointmentsFinder.FindAvailableAppointments(new AppointmentRepository(), DateTime.Now);
 
             if (availableAppointments.Count == 0)
             {

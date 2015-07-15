@@ -86,6 +86,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Controllers\AppointmentsControllerTest.cs" />
+    <Compile Include="Domain\AppointmentsFinderTest.cs" />
+    <Compile Include="Domain\AppointmentsNotificationPolicyTest.cs" />
     <Compile Include="Model\InMemoryAppointmentRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

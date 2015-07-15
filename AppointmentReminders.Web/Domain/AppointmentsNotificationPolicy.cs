@@ -6,14 +6,13 @@ namespace AppointmentReminders.Web.Domain
 {
     public class AppointmentsNotificationPolicy
     {
-        public static bool NeedsToBeSent(Appointment appointment)
+        public static bool NeedsToBeSent(Appointment appointment, DateTime currentTime)
         {
-            var currentTime = DateTime.Now;
-            var localTime = appointment.Time
+            var appointmentLocalTime = appointment.Time
                 .ToLocalTime(appointment.Timezone)
                 .AddMinutes(- Appointment.ReminderTime); // Appointment time - 30 minutes
 
-            return currentTime.ToString("MM/dd/yyyy HH:mm") == localTime.ToString("MM/dd/yyyy HH:mm");
+            return currentTime.ToString("MM/dd/yyyy HH:mm") == appointmentLocalTime.ToString("MM/dd/yyyy HH:mm");
         }
     }
 }

@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AppointmentReminders.Web.Models;
+using AppointmentReminders.Web.Models.Repository;
 
 namespace AppointmentReminders.Web.Domain
 {
     public class AppointmentsFinder
     {
-        private static readonly AppointmentRemindersContext Context = new AppointmentRemindersContext();
-
-        public static IList<Appointment> GetAvailableAppointments()
+        public static IList<Appointment> FindAvailableAppointments(IAppointmentRepository repository, DateTime currentTime)
         {
-            var appointments = Context.Appointments.ToList();
-            var availableAppointments = appointments.Where(
-                AppointmentsNotificationPolicy.NeedsToBeSent);
+            var availableAppointments = repository.FindAll()
+                .Where(appointment => AppointmentsNotificationPolicy.NeedsToBeSent(appointment, currentTime));
+
 
             return availableAppointments.ToList();
         }
