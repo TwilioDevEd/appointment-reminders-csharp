@@ -1,0 +1,47 @@
+.step(data-title='Interacting with Appointments',
+data-file="AppointmentReminders.Web/Views/Appointments/Index.cshtml",
+data-mode="html")
+  h2 Interacting with Appointments
+
+  blockquote 
+    | As a user, I want to view a list of all future appointments, and be able to delete those appointments.
+  :markdown
+    If you're an organization that handles a lot of appointments, you probably want to be able to view and manage them in a single interface. That's what we'll tackle in this user story. We'll create a UI to:
+
+    * Show all appointments
+    * Delete individual appoinments
+
+    Let's start by looking at the controller.
+
+.step(data-title='The controller', data-file='AppointmentReminders.Web/Controllers/AppointmentsController.cs', data-highlight='34-40')
+  :markdown
+    ## Showing a List of Appointments
+
+    At the controller level, all we'll do is get a list of all the appointments in the database and rendering them with a view. We should also add a prompt if there aren't any appointments, since this demo relies on there being at least one appointment in the future.
+
+    Let's go back to the template to see our list of appointments.
+
+.step(data-title='View all Appointments', data-file='AppointmentReminders.Web/Views/Appointments/Index.cshtml', data-mode="html", data-highlight="48-52")
+  :markdown
+    ## View All Appointments
+
+    The index view lists all of the appointments which are automatically ordered by `Id`. The only thing we need to add to fulfill our user story is a delete button. We'll add the edit button just for kicks.
+
+    *HTML Helpers*
+
+    You may notice that instead of hard-coding the urls for Edit and Delete we are using a ASP.NET MVC [HTML Helpers](https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx). If you view the rendered markup you will see these paths:
+
+    * `/Appointments/Edit/(some ID)` for edit
+    * `/appointments/Delete/(some ID)` for delete
+
+    For delete action we use a confirm message by adding an *onlick* statement, explicitly this `onclick = "return confirm('Are you sure?');"` so that when the user attempts to delete an appointment a javascript confirm will be shown, if the user confirms the action then the appointment is deleted, otherwise no action will be taken.
+
+    Now let's take a look at what happens when an appointment is actually deleted.
+
+.step(data-title='Looking up an Appointment', data-file='AppointmentReminders.Web/Controllers/AppointmentsController.cs', data-highlight='41-56')
+  :markdown
+    ## Looking up the Appointment
+
+    In this controller we need to pull up an appointment record and then delete it. Let's take a look at how we're grabbing the appointment first.
+
+    There is some standard check going over here, if there is not an ID to look for, then the controller responds `Bad Request`, in the other hand if an ID is passed but it doesn't match with any of the appointments in the dabase then the controller responds `Not Found`.
