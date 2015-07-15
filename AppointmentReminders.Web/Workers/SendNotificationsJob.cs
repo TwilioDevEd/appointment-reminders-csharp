@@ -24,7 +24,8 @@ namespace AppointmentReminders.Web.Workers
             const string messageTemplate =
                 "Hi {0}. Just a reminder that you have an appointment coming up at {1}.";
 
-            var availableAppointments = AppointmentsFinder.FindAvailableAppointments(new AppointmentRepository(), DateTime.Now);
+            var appointmentsFinder = new AppointmentsFinder(new AppointmentRepository(), new TimeConverter());
+            var availableAppointments = appointmentsFinder.FindAvailableAppointments(DateTime.Now);
 
             if (availableAppointments.Count == 0)
             {

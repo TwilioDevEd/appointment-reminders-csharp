@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AppointmentReminders.Web.Domain;
 using AppointmentReminders.Web.Models;
 using Appointments.Web.Tests.Model;
+using Moq;
 using NUnit.Framework;
 
 namespace Appointments.Web.Tests.Domain
@@ -13,26 +14,44 @@ namespace Appointments.Web.Tests.Domain
         public void FindAvailableAppointments_returns_the_available_appointments()
         {
             var repository = new InMemoryAppointmentRepository();
-            var johnAppointment = new Appointment
-            {
-                Time = new DateTime(2015, 7, 15, 12, 00, 00),
-                Timezone = "W. Australia Standard Time"
-            };
 
-            var aliceAppointment = new Appointment
-            {
-                Time = new DateTime(2015, 7, 15, 12, 00, 00),
-                Timezone = "SA Pacific Standard Time"
-            };
+            var appointment = new Appointment();
+            repository.Create(appointment);
 
-            repository.Create(johnAppointment);
-            repository.Create(aliceAppointment);
+            var mockTimeConverter = new Mock<ITimeConverter>();
+
+            // For test purposes lets assume the local timezone is Pacific Standard Time.
+            mockTimeConverter.Setup(x => x.ToLocalTime(It.IsAny<DateTime>(), It.IsAny<String>()))
+                .Returns(new DateTime(2015, 07, 15, 12, 00, 00));
+
+            var appointmentsFinder = new AppointmentsFinder(repository, mockTimeConverter.Object);
 
             var currentTime = new DateTime(2015, 7, 15, 11, 30, 00);
+            var availableAppointments = appointmentsFinder.FindAvailableAppointments(currentTime);
 
-            var availableAppointments = AppointmentsFinder.FindAvailableAppointments(repository, currentTime);
+            CollectionAssert.Contains(availableAppointments, appointment);
+        }
 
-            CollectionAssert.AreEqual(new List<Appointment> {aliceAppointment}, availableAppointments);
+        [Test]
+        public void FindAvailableAppointments_returns_an_empty_list_if_there_are_not_available_appointments()
+        {
+            var repository = new InMemoryAppointmentRepository();
+
+            var appointment = new Appointment();
+            repository.Create(appointment);
+
+            var mockTimeConverter = new Mock<ITimeConverter>();
+
+            // For test purposes lets assume the local timezone is Pacific Standard Time.
+            mockTimeConverter.Setup(x => x.ToLocalTime(It.IsAny<DateTime>(), It.IsAny<String>()))
+                .Returns(new DateTime(2015, 07, 15, 12, 01, 00));
+
+            var appointmentsFinder = new AppointmentsFinder(repository, mockTimeConverter.Object);
+
+            var currentTime = new DateTime(2015, 7, 15, 11, 30, 00);
+            var availableAppointments = appointmentsFinder.FindAvailableAppointments(currentTime);
+
+            Assert.That(availableAppointments, Is.Empty);
         }
     }
 }

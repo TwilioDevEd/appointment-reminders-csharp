@@ -8,10 +8,22 @@ namespace AppointmentReminders.Web.Domain
 {
     public class AppointmentsFinder
     {
-        public static IList<Appointment> FindAvailableAppointments(IAppointmentRepository repository, DateTime currentTime)
+        private readonly IAppointmentRepository _repository;
+        private readonly ITimeConverter _timeConverter;
+
+        public AppointmentsFinder(IAppointmentRepository repository, ITimeConverter timeConverter)
         {
-            var availableAppointments = repository.FindAll()
-                .Where(appointment => AppointmentsNotificationPolicy.NeedsToBeSent(appointment, currentTime));
+            _repository = repository;
+            _timeConverter = timeConverter;
+        }
+
+        public IList<Appointment> FindAvailableAppointments(DateTime currentTime)
+        {
+            var availableAppointments = _repository.FindAll()
+                .Where(appointment =>
+                    new AppointmentsNotificationPolicy(
+                        appointment, _timeConverter)
+                    .NeedsToBeSent(currentTime));
 
 
             return availableAppointments.ToList();
