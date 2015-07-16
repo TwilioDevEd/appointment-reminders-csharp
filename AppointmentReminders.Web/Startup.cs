@@ -1,9 +1,7 @@
-﻿using Hangfire;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(AppointmentReminders.Web.Startup))]
-
 namespace AppointmentReminders.Web
 {
     public class Startup
