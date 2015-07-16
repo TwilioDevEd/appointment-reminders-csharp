@@ -17,7 +17,7 @@ namespace AppointmentReminders.Web.Workers
             var twilioRestClient = new Domain.Twilio.RestClient();
 
             AvailableAppointments().ForEach(appointment =>
-                twilioRestClient.SendMessage(
+                twilioRestClient.SendSmsMessage(
                 appointment.PhoneNumber,
                 string.Format(MessageTemplate, appointment.Name, appointment.Time.ToString("t"))));
         }

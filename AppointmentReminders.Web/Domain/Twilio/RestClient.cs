@@ -16,7 +16,7 @@ namespace AppointmentReminders.Web.Domain.Twilio
             _client = new TwilioRestClient(_accountSid, _authToken);
         }
 
-        public void SendMessage(string phoneNumber, string message)
+        public void SendSmsMessage(string phoneNumber, string message)
         {
             _client.SendSmsMessage(_twilioNumber, phoneNumber, message);
         }
