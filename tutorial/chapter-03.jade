@@ -14,7 +14,7 @@
       Let's take a look at how we decided to implement the latter with
       [Hangfire](http://hangfire.io/).
 
-.step(data-title='Working with Delayed Job',
+.step(data-title='Working with Hangfire',
 data-file='AppointmentReminders.Web/packages.config', data-language="xml", data-highlight='7-9')
   :markdown
     ## Working with Hangfire
@@ -44,4 +44,83 @@ data-file='AppointmentReminders.Web/packages.config', data-language="xml", data-
     More information about Hanfire installation can be found
     [here](http://docs.hangfire.io/en/latest/installation.html).
 
-    Now we're ready to create the actual job.
+    Let's take a look on how to **configure Hangfire** to use it in our appointment
+    reminders application.
+
+.step(data-title="Hangfire, The Configuration Class"
+data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
+data-highlight="7-22")
+  :markdown
+    ## Configuring Hangfire
+
+    ###  Hangfire, The Configuration Class
+
+    To keep it simple we extracted a class named `Hangfire` to encapsulate the
+    setup of Hangfire, we defined 2 static methods.
+
+    1. **ConfigureHangfire**. To manage the nitty-gritty details of the
+       configuration.
+    2. **InitialzeJobs**. To be responsible for initialize the recurring jobs.
+
+    Let's see what does `ConfigureHangfire` do in detail.
+
+.step(data-title="The Setup Method",
+data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
+data-highlight="9-16")
+  :markdown
+    ## Configuring Hangfire
+
+    ### The Setup Method
+
+    Our setup method is `ConfigureHangfire`, this guy is doing the following:
+
+    1. Let Hangfire know which **connection string** to use to handle
+       persistence, in our example we're using the beloved `DefaultConnection`.
+    2. Configuring the endpoint for Hangfire Dashboard. So, if you're running
+       our application locally we can see the dashboard by typing
+       **localhost:1474/jobs** in your browser.
+    3. Starting Hangfire Server.
+
+    Now, let's have a look on `InitializeJobs`.
+
+.step(data-title="Initializing the Jobs",
+data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
+data-highlight="18-21")
+  :markdown
+    ## Configuring Hangfire
+
+    ### Initializing the Jobs
+
+    `InitializeJobs` is responsible for handling the recurring
+    jobs by adding or updating a new job, more explicitly
+    `Workers.SendNotificationsJob`. Hold your horses!, we'll discuss about
+    the implementation of this **job** in a few moments.
+
+    In this method we're telling to Hangfire which method should be executed, in our
+    example the method is `Execute`, quite obvious right?. Also we're specifying
+    the job's frecuency of execution. If you want to dive into more details you
+    can check out [how to perform recurring
+    tasks](http://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html).
+
+    I think this configuration is quite simple, but this configuration is
+    incomplete. Let's find out what we need to finish with this configuration.
+
+.step(data-title="Putting the Pieces Together",
+data-file="AppointmentReminders.Web/Startup.cs", data-language="c#",
+data-highlight="4-15")
+  :markdown
+    ## Configuring Hangfire
+
+    ### Putting the Pieces Together
+
+    All the work we made on our precious `Hangfire` class is useless we have a
+    place where we can use the methods `ConfigureHangfire` and `InitializeJobs`,
+    for that reason we have the `Startup` class.
+
+    ASP.NET is an OWIN-based application, for that reason we're using the
+    following line `[assembly:
+    OwinStartup(typeof(AppointmentReminders.Web.Startup))]` in our OWIN Startup
+    class.
+
+    For further references you can take a look at [Hangfire
+      Configuration](http://docs.hangfire.io/en/latest/configuration/).
