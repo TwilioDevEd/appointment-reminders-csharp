@@ -1,0 +1,47 @@
+.step(data-title='Setting the Reminder')
+  :markdown
+    blockquote
+        | As an appointment system, I want to notify a user via SMS an arbitrary
+        interval before a future appointment.
+      :markdown
+        There are a lot of ways to build this part of our application, but no
+        matter how you implement it there should be two moving parts:
+
+        * A script that checks the database for any appointment that is
+        upcoming, then sends an sms
+        * A worker that runs that script continuously
+
+      Let's take a look at how we decided to implement the latter with
+      [Hangfire](http://hangfire.io/).
+
+.step(data-title='Working with Delayed Job',
+data-file='AppointmentReminders.Web/packages.config', data-language="xml", data-highlight='7-9')
+  :markdown
+    ## Working with Hangfire
+
+    There are a lot of ways to implement a scheduler/worker, there is a nice
+    [post](http://www.hanselman.com/blog/HowToRunBackgroundTasksInASPNET.aspx)
+    by Scott Hanselman that shows a few ways to run background tasks in ASP.NET
+    MVC. We decided to use Hanfire because of its simplicity. If you have a
+    better way to schedule jobs in ASP.NET MVC please let [us know](mailto:
+    help@twilio.com).
+
+    Hangfire needs a backend of some kind to queue the upcoming jobs. In this
+    implmentation we're using [SQL Server
+    Database](http://docs.hangfire.io/en/latest/configuration/using-sql-server.html),
+    but it's possible to use a different approach. You can check their
+    [documentation](http://docs.hangfire.io/en/latest/configuration/index.html)
+    for further details.
+
+    To install Hanfire you can either use:
+
+    **Package Manager Console**
+
+    `PM> Install-Package Hangfire`
+
+    or **Nuget Package Manager**
+
+    More information about Hanfire installation can be found
+    [here](http://docs.hangfire.io/en/latest/installation.html).
+
+    Now we're ready to create the actual job.
