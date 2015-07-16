@@ -144,6 +144,7 @@
     <Compile Include="Domain\AppointmentsFinder.cs" />
     <Compile Include="Domain\AppointmentsNotificationPolicy.cs" />
     <Compile Include="Domain\TimeConverter.cs" />
+    <Compile Include="Domain\Twilio\RestClient.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Models\Repository\AppointmentRepository.cs" />
     <Compile Include="Models\Repository\IAppointmentRepository.cs" />
