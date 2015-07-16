@@ -1,5 +1,4 @@
-﻿using System;
-using Hangfire;
+﻿using Hangfire;
 using Owin;
 
 namespace AppointmentReminders.Web
