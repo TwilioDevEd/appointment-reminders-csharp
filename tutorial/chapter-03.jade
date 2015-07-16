@@ -1,18 +1,18 @@
 .step(data-title='Setting the Reminder')
-  :markdown
     blockquote
-        | As an appointment system, I want to notify a user via SMS an arbitrary
-        interval before a future appointment.
-      :markdown
-        There are a lot of ways to build this part of our application, but no
-        matter how you implement it there should be two moving parts:
+      | As an appointment system, I want to notify a user via SMS an arbitrary
+      interval before a future appointment.
 
-        * A script that checks the database for any appointment that is
-        upcoming, then sends an sms
-        * A worker that runs that script continuously
+    :markdown
+      There are a lot of ways to build this part of our application, but no
+      matter how you implement it there should be two moving parts:
 
-      Let's take a look at how we decided to implement the latter with
-      [Hangfire](http://hangfire.io/).
+      * A script that checks the database for any appointment that is upcoming,
+      then sends an sms.
+      * A worker that runs that script continuously.
+
+      Let's take a look at how we decided to implement the latter
+      with[Hangfire](http://hangfire.io/).
 
 .step(data-title='Working with Hangfire',
 data-file='AppointmentReminders.Web/packages.config', data-language="xml", data-highlight='7-9')
@@ -49,7 +49,7 @@ data-file='AppointmentReminders.Web/packages.config', data-language="xml", data-
 
 .step(data-title="Hangfire, The Configuration Class"
 data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
-data-highlight="7-22")
+data-highlight="6-21")
   :markdown
     ## Configuring Hangfire
 
@@ -66,7 +66,7 @@ data-highlight="7-22")
 
 .step(data-title="The Setup Method",
 data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
-data-highlight="9-16")
+data-highlight="8-15")
   :markdown
     ## Configuring Hangfire
 
@@ -85,7 +85,7 @@ data-highlight="9-16")
 
 .step(data-title="Initializing the Jobs",
 data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
-data-highlight="18-21")
+data-highlight="17-20")
   :markdown
     ## Configuring Hangfire
 
