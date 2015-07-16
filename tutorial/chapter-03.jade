@@ -193,3 +193,41 @@ data-language="c#", data-highlight="10-19")
 
     We're almost done.
 
+.step(data-title="The Job",
+data-file="AppointmentReminders.Web/Workers/SendNotificationsJob.cs",
+data-language="c#", data-highlight="15-23")
+  :markdown
+    ## The Job
+
+    Or more explicitly the `SendNotificationsJob`, its public interface only
+    have a method `Execute`, this method finds the available appointments by
+    using `AppointmentsFinder` and send them using
+    `Domain.Twilio.RestClient`.
+
+    As you can figure out `Domain.Twilio.RestClient` is simply a wrapper around
+    [Twilio Rest API](https://www.twilio.com/docs/api/rest/sending-sms).
+
+    Let's see the final piece of our puzzle.
+
+.step(data-title="The Wrapper for the Rest Client",
+data-file="AppointmentReminders.Web/Domain/Twilio/RestClient.cs",
+data-language="c#", data-highlight="6-23")
+  :markdown
+    ## The Wrapper for the Rest Client
+
+    The idea behind this wrapper is to ease the initialization of the API from
+    the job perspective and to *wrap* the method `SendSmsMessage`.
+
+    The values to setup the rest client are pulled from the
+    [Web.config](https://github.com/TwilioDevEd/appointment-reminders-csharp/blob/a9e75048d78216d2afd432de0080a175e53f6c34/AppointmentReminders.Web/Web.config.sample#L19-L21)
+    file.
+
+    ## All Done
+
+    As you saw, some little of configuration and we're ready to get automated
+    appointment reminders firing with Twilio. Be sure to check out the project
+    buttons above to download the source for this application, view it on GitHub.
+
+    We'd also love to hear your feedback on this tutorial - [please reach out to
+    us](mailto:help@twilio.com) with any questions you might have.  Thanks for
+    checking out the tutorial!
