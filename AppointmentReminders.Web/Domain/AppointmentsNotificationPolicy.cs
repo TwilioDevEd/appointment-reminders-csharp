@@ -17,7 +17,8 @@ namespace AppointmentReminders.Web.Domain
         public bool NeedsToBeSent(DateTime currentTime)
         {
             var reminderLocalTime = GetAppointmentLocalTime()
-                .AddMinutes(- Appointment.ReminderTime); // Appointment time - 30 minutes
+                .AddMinutes(- Appointment.ReminderTime); // Notify our appointment attendee
+                                                         // X minutes before the appointment time
 
             return currentTime.ToString("MM/dd/yyyy HH:mm") == reminderLocalTime.ToString("MM/dd/yyyy HH:mm");
         }
