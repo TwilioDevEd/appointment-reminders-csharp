@@ -124,3 +124,72 @@ data-highlight="4-15")
 
     For further references you can take a look at [Hangfire
       Configuration](http://docs.hangfire.io/en/latest/configuration/).
+
+.step(data-title="Looking for Future Appointments",
+data-file="AppointmentReminders.Web/Domain/AppointmentsFinder.cs",
+data-language="c#", data-highlight="20-30")
+  :markdown
+    ## Looking for Future Appointments
+
+    For finding future appointments we are relying on `AppointmentsFinder`. More
+    explictly we'll use the method `FindAvailableAppointments` to do the hard
+    work. `FindAvailableAppointmets` just filter in all the appointments that
+    are need to be sent.
+
+    Now, the obvious question is how do we determine if an appointment needs to
+    be sent or not. To do this job we make out `AppointmentsNotificationPolicy`.
+    Let's have a look on its implementation.
+
+.step(data-title="Which Appointments Needs to be Sent",
+data-file="AppointmentReminders.Web/Domain/AppointmentsNotificationPolicy.cs",
+data-language="c#", data-highlight="6-30")
+  :markdown
+    ## Which Appointments Needs to be Sent
+
+    The responsability of this class is to figure out if an appointment needs to
+    be sent based on the appointments time.
+
+    There one constraint, we want to sent the appointment 30 minutes before of
+    the event.
+
+    The idea is so simple, get the appointment's time, and substract 30 minutes
+    from that time. If the reminder time is equal to the **current local time**
+    then the appointment is elegible to be sent. Easy peasy, right?
+
+    ... wait! We need to take care of the timezone. Let's see how to deal with
+    this particular problem.
+
+.step(data-title="Dealing with Different Timezones",
+data-file="AppointmentReminders.Web/Domain/TimeConverter.cs",
+data-language="c#", data-highlight="10-19")
+  :markdown
+    ## Dealing with Different Timezones
+    Let me introduce you `TimeConverter`, this class only knows how to convert
+    any given time into the local time. You may be wondering, why?
+
+    Let's say there is an appointment like this:
+
+    ```
+    >> Appointment
+       Time: 12:00 PM
+       Timezone: Pacific Standard Time
+    ```
+
+    Now, let's imagine that our application is running in some computer located
+    somewhere in Central Standard Time.
+
+    ```
+    >>  Application (Appointment Reminders)
+       Current Local Time: 2:00 PM
+       Timezone: Central Standard Time
+    ```
+
+    Both times are equivalent, if we translate them to
+    [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) the
+    appointment time and the application time are the same.
+
+    So, the method `ToLocalTime` takes any given time and a timezone, and
+    translate that time to the application local time.
+
+    We're almost done.
+
