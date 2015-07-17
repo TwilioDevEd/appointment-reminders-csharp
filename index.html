@@ -29,53 +29,90 @@
 </div><div data-title="About This Tutorial" class="step"><h2 id="about-this-tutorial">About This Tutorial</h2>
 <p>In this tutorial, we will be working through a series of <a href="http://en.wikipedia.org/wiki/User_story">user stories</a> that describe how to fully implement account verification in a web application. Our team implemented this example application in about 12 story points (roughly equivalent to 12 working hours).</p>
 <p>Let&#39;s get started with our first user story around creating a new user account.</p>
-</div><div data-title="The User Story" class="step"><h2>Creating an Appointment</h2><blockquote>As a user, I want to create an appointment with a name, guest phone numbers, and a time in the future.</blockquote><p>In order to build an automated appointment reminder app, we probably should start with an appointment. This story requires that we create a bit of UI and a model object to create and save a new <code>Appointment</code> in our system. At a high level, here&#39;s what we will need to add:</p>
+</div><div data-title="The User Story" class="step"><h2>Creating an Appointment</h2><blockquote>As a user, I want to create an appointment with a name, guest phone
+numbers, and a time in the future.</blockquote><p>In order to build an automated appointment reminder application, we
+probably should start with an appointment. This story requires that we
+create a bit of UI and a model object to create and save a new <code>Appointment</code>
+in our system. At a high level, here&#39;s what we will need to add:</p>
 <ul>
 <li>A form to enter details about the appointment</li>
-<li>A route and controller function on the server to render the form </li>
-<li>A route and controller function on the server to handle the form POST request</li>
-<li>A persistent <code>Appointment</code> model object to store information about the user </li>
+<li>A route and controller function on the server to render the form</li>
+<li>A route and controller function on the server to handle the form POST
+request</li>
+<li>A persistent <code>Appointment</code> model object to store information about the
+user</li>
 </ul>
-<p>Let&#39;s start by looking at the model, where we decide what information we want to store with the appointment.</p>
-</div><div data-title="Appointment Model" data-file="AppointmentReminders.Web/Models/Appointment.cs" class="step"><h2 id="appointment-model">Appointment Model</h2>
-<p>The appointment model is pretty simple out of the box, but since humans will be interacting with it let&#39;s make sure we add some data validation.</p>
+<p>Let&#39;s start by looking at the model, where we decide what information we
+want to store with the appointment.</p>
+</div><div data-title="Appointment Model" data-file="AppointmentReminders.Web/Models/Appointment.cs" data-highlight="7-26" class="step"><h2 id="appointment-model">Appointment Model</h2>
+<p>The appointment model is fairly straightforward, but since humans will be
+interacting with it let&#39;s make sure we add some data validation.</p>
 <p><em>Data Validation</em></p>
-<p>Validations are important since we want to make sure only accurate data is
-being saved into our database. In this case, we only want to validate that
-all of our required fields are present. We can do this by using <code>[Required]</code>
-data annotation.</p>
-<p>It is likely that our Appointment Model would be created by an admin person
-at the site of the appointment. Well it would be great if we could give our
+<p>Validations are important, we don&#39;t want to have invalid data in our
+application. To do this job we&#39;re relying on <a href="http://www.asp.net/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6">ASP.NET Data
+Annotations</a>.
+In our case, we only want to validate that some fields required. To do this
+job we&#39;re gonna use <code>[Required]</code> data annotation.</p>
+<p>By default ASP.NET MVC displays the property name when rendering a control.
+(<em>In our example those property names can be <code>Name</code> or <code>PhoneNumber</code></em>). As
+you can see, for rendering <code>Name</code> there shoudn&#39;t be any problem, but for
+<code>PhoneNumber</code> that&#39;s not the case, we might want to have something like
+<strong>Phone Number</strong>. For this kind of scenarios we can use another data
+annotation <code>[Display(Name = &quot;NAME_TO_BE_DISPLAYED&quot;]</code> where <code>Name</code> will
+contain the value to be displayed.</p>
+<p>Well, for validating the <code>PhoneNumber</code> we&#39;re using <code>[Phone]</code> data
+annotation.</p>
+<p>It is likely that our Appointment model would be created by an admin person
+at the site of the appointment. Well, it would be great if we could give our
 admin user some feedback when they create the appointment. In ASP.NET MVC we
 can take advantage of the built-in validation, if there are errores those
 will be displayed in the form.</p>
-<p>One note: in order to run this demo you would need to run <code>Update-Database</code>
-which would run the migrations in our AppointmentReminders.Web/Migrations
-folderAppointmentReminders.Web. For this tutorial we&#39;re gonna focus on the
-core concepts but if you want to learn more about migrations you can read
-the <a href="http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application">ASP.NET MVC
-guide</a>
-on the subject.</p>
-<p>Now we&#39;re ready to move up to the controller level of the application.</p>
-</div><div data-title="New Appointment Form" data-file="AppointmentReminders.Web/Views/Appointments/_Form.cshtml" data-highlight="6-7" data-mode="html" class="step"><h2 id="new-appointment-form">New Appointment Form</h2>
+</div><div data-title="Running Migrations" data-file="AppointmentReminders.Web/Migrations/201507011415152_InitialCreate.cs" data-highlight="6-28" class="step"><h2 id="running-migrations">Running Migrations</h2>
+<p>In this project we&#39;re using <a href="http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application">code first
+migrations</a>
+so that, in order to run this demo you need to run <code>Update-Database</code>.</p>
+<pre><code>PM &gt; Update-Database
+</code></pre><p>Once you run the migration, the project will have a hidden file under <em>App
+Data</em> since we&#39;re using an embedded database.</p>
+<p>Now we&#39;re ready to move up to the view level of the application.</p>
+</div><div data-title="New Appointment Form" data-file="AppointmentReminders.Web/Views/Appointments/_Form.cshtml" data-mode="html" class="step"><h2 id="new-appointment-form">New Appointment Form</h2>
 <p>When we create a new appointment, we need a guest name, a phone number and a
 time. By using <a href="https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx">HTML Helper
 classes</a>
-we can bind the form to the model object. This will generate the necessary
-html markup that will create a new Appointment on submit.</p>
+we can bind the form to the model object. Those helpers will generate the
+necessary html markup that will create a new Appointment on submit.</p>
 <p>Let&#39;s point out one specific helper class that ASP.NET MVC gives us for
 model-bound forms.</p>
+</div><div data-title="HTML Helpers" data-file="AppointmentReminders.Web/Views/Appointments/_Form.cshtml" data-highlight="7-8" data-mode="html" class="step"><h2 id="html-helpers">HTML Helpers</h2>
+<p>To render text boxes we&#39;re using the helper <code>TextBoxFor</code> and for render the
+necesary validation messages <em>if they are necessary</em> we&#39;ll use
+<code>ValidationMessageFor</code>.</p>
+<p>If you want to see the details of how to use HTML Extensions, please have a
+look in their
+<a href="https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx">documentation</a>.</p>
+<p>Now we have the basic building blocks to work interact with our
+appointments, let&#39;s have a look on that.</p>
 </div></div><div data-title="Interacting with Appointments" class="chapter"><div data-title="Interacting with Appointments" data-file="AppointmentReminders.Web/Views/Appointments/Index.cshtml" data-mode="html" class="step"><h2>Interacting with Appointments</h2><blockquote> 
-As a user, I want to view a list of all future appointments, and be able to delete those appointments.</blockquote><p>If you&#39;re an organization that handles a lot of appointments, you probably want to be able to view and manage them in a single interface. That&#39;s what we&#39;ll tackle in this user story. We&#39;ll create a UI to:</p>
+As a user, I want to view a list of all future appointments, and be able<to>delete those appointments.</to></blockquote><p>If you&#39;re an organization that handles a lot of appointments, you probably
+  want to be able to view and manage them in a single interface. That&#39;s what
+  we&#39;ll tackle in this user story. We&#39;ll create a UI to:</p>
 <ul>
 <li>Show all appointments</li>
 <li>Delete individual appoinments</li>
 </ul>
 <p>Let&#39;s start by looking at the controller.</p>
 </div><div data-title="The controller" data-file="AppointmentReminders.Web/Controllers/AppointmentsController.cs" data-highlight="34-40" class="step"><h2 id="showing-a-list-of-appointments">Showing a List of Appointments</h2>
-<p>At the controller level, all we&#39;ll do is get a list of all the appointments in the database and rendering them with a view. We should also add a prompt if there aren&#39;t any appointments, since this demo relies on there being at least one appointment in the future.</p>
+<p>At the controller level, all we&#39;ll do is get a list of all the appointments
+in the database and rendering them with a view. We should also add a prompt
+if there aren&#39;t any appointments, since this demo relies on there being at
+least one appointment in the future.</p>
 <p>Let&#39;s go back to the template to see our list of appointments.</p>
-</div><div data-title="View all Appointments" data-file="AppointmentReminders.Web/Views/Appointments/Index.cshtml" data-mode="html" data-highlight="48-52" class="step"><h2 id="view-all-appointments">View All Appointments</h2>
+<p>One note: Probably you already noticed we&#39;re using the infamous repository
+pattern, we&#39;re using this mostly because we want to make this project
+testeable. If you&#39;re not familiar with this pattern, we highly recommend you
+to check this <a href="http://www.codeproject.com/Articles/526874/Repositorypluspattern-cplusdoneplusright">post</a>
+out.</p>
+</div><div data-title="View all Appointments" data-file="AppointmentReminders.Web/Views/Appointments/Index.cshtml" data-mode="html" data-highlight="47-52" class="step"><h2 id="view-all-appointments">View All Appointments</h2>
 <p>The index view lists all of the appointments which are automatically ordered by <code>Id</code>. The only thing we need to add to fulfill our user story is a delete button. We&#39;ll add the edit button just for kicks.</p>
 <p><em>HTML Helpers</em></p>
 <p>You may notice that instead of hard-coding the urls for Edit and Delete we are using a ASP.NET MVC <a href="https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx">HTML Helpers</a>. If you view the rendered markup you will see these paths:</p>
@@ -95,11 +132,11 @@ As a user, I want to view a list of all future appointments, and be able to dele
 matter how you implement it there should be two moving parts:</p>
 <ul>
 <li>A script that checks the database for any appointment that is upcoming,
-then sends an sms.</li>
+and then sends a SMS.</li>
 <li>A worker that runs that script continuously.</li>
 </ul>
 <p>Let&#39;s take a look at how we decided to implement the latter
-with<a href="http://hangfire.io/">Hangfire</a>.</p>
+with <a href="http://hangfire.io/">Hangfire</a>.</p>
 </div><div data-title="Working with Hangfire" data-file="AppointmentReminders.Web/packages.config" data-language="xml" data-highlight="7-9" class="step"><h2 id="working-with-hangfire">Working with Hangfire</h2>
 <p>There are a lot of ways to implement a scheduler/worker, there is a nice
 <a href="http://www.hanselman.com/blog/HowToRunBackgroundTasksInASPNET.aspx">post</a>
@@ -138,7 +175,7 @@ configuration.</li>
 <li>Let Hangfire know which <strong>connection string</strong> to use to handle
 persistence, in our example we&#39;re using the beloved <code>DefaultConnection</code>.</li>
 <li>Configuring the endpoint for Hangfire Dashboard. So, if you&#39;re running
-our application locally we can see the dashboard by typing
+our application locally you can see the dashboard by typing
 <strong>localhost:1474/jobs</strong> in your browser.</li>
 <li>Starting Hangfire Server.</li>
 </ol>
@@ -149,18 +186,18 @@ our application locally we can see the dashboard by typing
 jobs by adding or updating a new job, more explicitly
 <code>Workers.SendNotificationsJob</code>. Hold your horses!, we&#39;ll discuss about
 the implementation of this <strong>job</strong> in a few moments.</p>
-<p>In this method we&#39;re telling to Hangfire which method should be executed, in our
+<p>In this method we&#39;re telling Hangfire which method should be executed, in our
 example the method is <code>Execute</code>, quite obvious right?. Also we&#39;re specifying
 the job&#39;s frecuency of execution. If you want to dive into more details you
 can check out <a href="http://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html">how to perform recurring
 tasks</a>.</p>
-<p>I think this configuration is quite simple, but this configuration is
-incomplete. Let&#39;s find out what we need to finish with this configuration.</p>
+<p>I think this configuration is quite simple, but it&#39;s incomplete. Let&#39;s find
+out what we&#39;re missing to get it rolling.</p>
 </div><div data-title="Putting the Pieces Together" data-file="AppointmentReminders.Web/Startup.cs" data-language="c#" data-highlight="4-15" class="step"><h2 id="configuring-hangfire">Configuring Hangfire</h2>
 <h3 id="putting-the-pieces-together">Putting the Pieces Together</h3>
-<p>All the work we made on our precious <code>Hangfire</code> class is useless we have a
-place where we can use the methods <code>ConfigureHangfire</code> and <code>InitializeJobs</code>,
-for that reason we have the <code>Startup</code> class.</p>
+<p>All the work we made on our precious <code>Hangfire</code> class is useless unless we
+have a place where we can employ the methods <code>ConfigureHangfire</code> and
+<code>InitializeJobs</code>, for that reason we have the <code>Startup</code> class.</p>
 <p>ASP.NET is an OWIN-based application, for that reason we&#39;re using the
 following line <code>[assembly:
 OwinStartup(typeof(AppointmentReminders.Web.Startup))]</code> in our OWIN Startup
@@ -171,19 +208,19 @@ class.</p>
 <p>For finding future appointments we are relying on <code>AppointmentsFinder</code>. More
 explictly we&#39;ll use the method <code>FindAvailableAppointments</code> to do the hard
 work. <code>FindAvailableAppointmets</code> just filter in all the appointments that
-are need to be sent.</p>
+require to be sent.</p>
 <p>Now, the obvious question is how do we determine if an appointment needs to
 be sent or not. To do this job we make out <code>AppointmentsNotificationPolicy</code>.
 Let&#39;s have a look on its implementation.</p>
-</div><div data-title="Which Appointments Needs to be Sent" data-file="AppointmentReminders.Web/Domain/AppointmentsNotificationPolicy.cs" data-language="c#" data-highlight="6-30" class="step"><h2 id="which-appointments-needs-to-be-sent">Which Appointments Needs to be Sent</h2>
-<p>The responsability of this class is to figure out if an appointment needs to
+</div><div data-title="Which Appointments Needs to be Sent" data-file="AppointmentReminders.Web/Domain/AppointmentsNotificationPolicy.cs" data-language="c#" data-highlight="6-30" class="step"><h2 id="which-appointments-require-to-be-sent">Which Appointments Require to be Sent</h2>
+<p>The responsability of this class is to figure out if an appointment has to
 be sent based on the appointments time.</p>
 <p>There one constraint, we want to sent the appointment 30 minutes before of
 the event.</p>
 <p>The idea is so simple, get the appointment&#39;s time, and substract 30 minutes
 from that time. If the reminder time is equal to the <strong>current local time</strong>
 then the appointment is elegible to be sent. Easy peasy, right?</p>
-<p>... wait! We need to take care of the timezone. Let&#39;s see how to deal with
+<p>... wait! We should be aware of the timezone. Let&#39;s see how to deal with
 this particular problem.</p>
 </div><div data-title="Dealing with Different Timezones" data-file="AppointmentReminders.Web/Domain/TimeConverter.cs" data-language="c#" data-highlight="10-19" class="step"><h2 id="dealing-with-different-timezones">Dealing with Different Timezones</h2>
 <p>Let me introduce you <code>TimeConverter</code>, this class only knows how to convert
@@ -218,14 +255,16 @@ the job perspective and to <em>wrap</em> the method <code>SendSmsMessage</code>.
 <a href="https://github.com/TwilioDevEd/appointment-reminders-csharp/blob/a9e75048d78216d2afd432de0080a175e53f6c34/AppointmentReminders.Web/Web.config.sample#L19-L21">Web.config</a>
 file.</p>
 <h2 id="all-done">All Done</h2>
-<p>As you saw, some little of configuration and we&#39;re ready to get automated
+<p>As you saw, some minor configuration and we&#39;re ready to get automated
 appointment reminders firing with Twilio. Be sure to check out the project
-buttons above to download the source for this application, view it on GitHub.</p>
+buttons above to download the source code for this application, view it on
+GitHub.</p>
 <p>We&#39;d also love to hear your feedback on this tutorial - <a href="mailto:help@twilio.com">please reach out to
 us</a> with any questions you might have.  Thanks for
 checking out the tutorial!</p>
 </div></div>
 <div class="saurus-files" style="display:none;"><textarea class="saurus-file" data-file="AppointmentReminders.Web/Models/Appointment.cs" data-mode="csharp">77u/dXNpbmcgU3lzdGVtOwp1c2luZyBTeXN0ZW0uQ29tcG9uZW50TW9kZWwuRGF0YUFubm90YXRpb25zOwp1c2luZyBNaWNyb3NvZnQuQWpheC5VdGlsaXRpZXM7CgpuYW1lc3BhY2UgQXBwb2ludG1lbnRSZW1pbmRlcnMuV2ViLk1vZGVscwp7CiAgICBwdWJsaWMgY2xhc3MgQXBwb2ludG1lbnQKICAgIHsKICAgICAgICBwdWJsaWMgc3RhdGljIGludCBSZW1pbmRlclRpbWUgPSAzMDsKICAgICAgICBwdWJsaWMgaW50IElkIHsgZ2V0OyBzZXQ7IH0KCiAgICAgICAgW1JlcXVpcmVkXQogICAgICAgIHB1YmxpYyBzdHJpbmcgTmFtZSB7IGdldDsgc2V0OyB9CgogICAgICAgIFtSZXF1aXJlZCwgUGhvbmUsIERpc3BsYXkoTmFtZSA9ICJQaG9uZSBudW1iZXIiKV0KICAgICAgICBwdWJsaWMgc3RyaW5nIFBob25lTnVtYmVyIHsgZ2V0OyBzZXQ7IH0KCiAgICAgICAgW1JlcXVpcmVkXQogICAgICAgIHB1YmxpYyBEYXRlVGltZSBUaW1lIHsgZ2V0OyBzZXQ7IH0KCiAgICAgICAgW1JlcXVpcmVkXQogICAgICAgIHB1YmxpYyBzdHJpbmcgVGltZXpvbmUgeyBnZXQ7IHNldDsgfQoKICAgICAgICBbRGlzcGxheShOYW1lID0gIkNyZWF0ZWQgYXQiKV0KICAgICAgICBwdWJsaWMgRGF0ZVRpbWUgQ3JlYXRlZEF0IHsgZ2V0OyBzZXQ7IH0KICAgIH0KfQ==</textarea>
+<textarea class="saurus-file" data-file="AppointmentReminders.Web/Migrations/201507011415152_InitialCreate.cs" data-mode="csharp">bmFtZXNwYWNlIEFwcG9pbnRtZW50UmVtaW5kZXJzLldlYi5NaWdyYXRpb25zCnsKICAgIHVzaW5nIFN5c3RlbTsKICAgIHVzaW5nIFN5c3RlbS5EYXRhLkVudGl0eS5NaWdyYXRpb25zOwogICAgCiAgICBwdWJsaWMgcGFydGlhbCBjbGFzcyBJbml0aWFsQ3JlYXRlIDogRGJNaWdyYXRpb24KICAgIHsKICAgICAgICBwdWJsaWMgb3ZlcnJpZGUgdm9pZCBVcCgpCiAgICAgICAgewogICAgICAgICAgICBDcmVhdGVUYWJsZSgKICAgICAgICAgICAgICAgICJkYm8uQXBwb2ludG1lbnRzIiwKICAgICAgICAgICAgICAgIGMgPT4gbmV3CiAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgICBJZCA9IGMuSW50KG51bGxhYmxlOiBmYWxzZSwgaWRlbnRpdHk6IHRydWUpLAogICAgICAgICAgICAgICAgICAgICAgICBOYW1lID0gYy5TdHJpbmcobnVsbGFibGU6IGZhbHNlKSwKICAgICAgICAgICAgICAgICAgICAgICAgUGhvbmVOdW1iZXIgPSBjLlN0cmluZyhudWxsYWJsZTogZmFsc2UpLAogICAgICAgICAgICAgICAgICAgICAgICBUaW1lID0gYy5EYXRlVGltZShudWxsYWJsZTogZmFsc2UpLAogICAgICAgICAgICAgICAgICAgICAgICBDcmVhdGVkQXQgPSBjLkRhdGVUaW1lKG51bGxhYmxlOiBmYWxzZSksCiAgICAgICAgICAgICAgICAgICAgfSkKICAgICAgICAgICAgICAgIC5QcmltYXJ5S2V5KHQgPT4gdC5JZCk7CiAgICAgICAgICAgIAogICAgICAgIH0KICAgICAgICAKICAgICAgICBwdWJsaWMgb3ZlcnJpZGUgdm9pZCBEb3duKCkKICAgICAgICB7CiAgICAgICAgICAgIERyb3BUYWJsZSgiZGJvLkFwcG9pbnRtZW50cyIpOwogICAgICAgIH0KICAgIH0KfQo=</textarea>
 <textarea class="saurus-file" data-file="AppointmentReminders.Web/Views/Appointments/_Form.cshtml" data-mode="html">77u/QHVzaW5nIEFwcG9pbnRtZW50UmVtaW5kZXJzLldlYi5FeHRlbnNpb25zCkBtb2RlbCBBcHBvaW50bWVudFJlbWluZGVycy5XZWIuTW9kZWxzLkFwcG9pbnRtZW50Cgo8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgIEBIdG1sLkxhYmVsRm9yKHggPT4geC5OYW1lLCBuZXcgeyBAY2xhc3MgPSAiY29udHJvbC1sYWJlbCBjb2wtbGctMiIgfSkKICAgIDxkaXYgY2xhc3M9ImNvbC1sZy0xMCI+CiAgICAgICAgQEh0bWwuVGV4dEJveEZvcih4ID0+IHguTmFtZSwgbmV3IHsgQGNsYXNzID0gImZvcm0tY29udHJvbCIgfSkKICAgICAgICBASHRtbC5WYWxpZGF0aW9uTWVzc2FnZUZvcih4ID0+IHguTmFtZSkKICAgIDwvZGl2Pgo8L2Rpdj4KPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CiAgICBASHRtbC5MYWJlbEZvcih4ID0+IHguUGhvbmVOdW1iZXIsIG5ldyB7IEBjbGFzcyA9ICJjb250cm9sLWxhYmVsIGNvbC1sZy0yIiB9KQogICAgPGRpdiBjbGFzcz0iY29sLWxnLTEwIj4KICAgICAgICBASHRtbC5UZXh0Qm94Rm9yKHggPT4geC5QaG9uZU51bWJlciwgbmV3IHsgQGNsYXNzID0gImZvcm0tY29udHJvbCIgfSkKICAgICAgICBASHRtbC5WYWxpZGF0aW9uTWVzc2FnZUZvcih4ID0+IHguUGhvbmVOdW1iZXIpCiAgICA8L2Rpdj4KPC9kaXY+CjxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPgogICAgPGxhYmVsIGNsYXNzPSJjb250cm9sLWxhYmVsIGNvbC1sZy0yIj5UaW1lIGFuZCBEYXRlPC9sYWJlbD4KICAgIDxkaXYgY2xhc3M9ImNvbC1sZy0xMCI+CiAgICAgICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICAgICAgPGRpdiBjbGFzcz0iY29sLWxnLTYiPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0naW5wdXQtZ3JvdXAgZGF0ZScgaWQ9ImRhdGV0aW1lcGlja2VyIj4KICAgICAgICAgICAgICAgICAgICBASHRtbC5UZXh0Qm94KCJUaW1lIiwgTW9kZWwuVGltZS5Ub0N1c3RvbURhdGVTdHJpbmcoKSwgbmV3IHsgQGNsYXNzID0gImZvcm0tY29udHJvbCJ9KQogICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJpbnB1dC1ncm91cC1hZGRvbiI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJnbHlwaGljb24gZ2x5cGhpY29uLWNhbGVuZGFyIj48L3NwYW4+CiAgICAgICAgICAgICAgICAgICAgPC9zcGFuPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtbGctNiBwdWxsLXJpZ2h0Ij4KICAgICAgICAgICAgICAgIEBIdG1sLkRyb3BEb3duTGlzdEZvcih4ID0+IHguVGltZXpvbmUsIChJRW51bWVyYWJsZTxTZWxlY3RMaXN0SXRlbT4pVmlld0JhZy5UaW1lem9uZXMsIG5ldyB7IEBjbGFzcyA9ICJmb3JtLWNvbnRyb2wiIH0pCiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2Pgo=</textarea>
 <textarea class="saurus-file" data-file="AppointmentReminders.Web/Views/Appointments/Index.cshtml" data-mode="html">77u/QG1vZGVsIElFbnVtZXJhYmxlPEFwcG9pbnRtZW50UmVtaW5kZXJzLldlYi5Nb2RlbHMuQXBwb2ludG1lbnQ+Cgo8ZGl2IGNsYXNzPSJwYWdlLWhlYWRlciI+CiAgICA8aDE+QXBwb2ludG1lbnRzPC9oMT4KPC9kaXY+Cgo8dGFibGUgY2xhc3M9InRhYmxlIHRhYmxlLXN0cmlwZWQiPgogICAgPHRyPgogICAgICAgIDx0aD4KICAgICAgICAgICAgQEh0bWwuRGlzcGxheU5hbWVGb3IobW9kZWwgPT4gbW9kZWwuSWQpCiAgICAgICAgPC90aD4KICAgICAgICA8dGg+CiAgICAgICAgICAgIEBIdG1sLkRpc3BsYXlOYW1lRm9yKG1vZGVsID0+IG1vZGVsLk5hbWUpCiAgICAgICAgPC90aD4KICAgICAgICA8dGg+CiAgICAgICAgICAgIEBIdG1sLkRpc3BsYXlOYW1lRm9yKG1vZGVsID0+IG1vZGVsLlBob25lTnVtYmVyKQogICAgICAgIDwvdGg+CiAgICAgICAgPHRoPgogICAgICAgICAgICBASHRtbC5EaXNwbGF5TmFtZUZvcihtb2RlbCA9PiBtb2RlbC5UaW1lKQogICAgICAgIDwvdGg+CiAgICAgICAgPHRoPgogICAgICAgICAgICBASHRtbC5EaXNwbGF5TmFtZUZvcihtb2RlbCA9PiBtb2RlbC5DcmVhdGVkQXQpCiAgICAgICAgPC90aD4KICAgICAgICA8dGg+CiAgICAgICAgICAgIEFjdGlvbnMKICAgICAgICA8L3RoPgogICAgPC90cj4KCkBmb3JlYWNoICh2YXIgaXRlbSBpbiBNb2RlbCkgewogICAgPHRyPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgQEh0bWwuQWN0aW9uTGluayhpdGVtLklkLlRvU3RyaW5nKCksICJEZXRhaWxzIiwgbmV3IHtDb250cm9sbGVyID0gIkFwcG9pbnRtZW50cyIsIGlkID0gaXRlbS5JZH0pCiAgICAgICAgPC90ZD4KICAgICAgICA8dGQ+CiAgICAgICAgICAgIEBIdG1sLkRpc3BsYXlGb3IobW9kZWxJdGVtID0+IGl0ZW0uTmFtZSkKICAgICAgICA8L3RkPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgQEh0bWwuRGlzcGxheUZvcihtb2RlbEl0ZW0gPT4gaXRlbS5QaG9uZU51bWJlcikKICAgICAgICA8L3RkPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgQEh0bWwuRGlzcGxheUZvcihtb2RlbEl0ZW0gPT4gaXRlbS5UaW1lKQogICAgICAgIDwvdGQ+CiAgICAgICAgPHRkPgogICAgICAgICAgICBASHRtbC5EaXNwbGF5Rm9yKG1vZGVsSXRlbSA9PiBpdGVtLkNyZWF0ZWRBdCkKICAgICAgICA8L3RkPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgQEh0bWwuQWN0aW9uTGluaygiRWRpdCIsICJFZGl0IiwgbmV3IHsgQ29udHJvbGxlciA9ICJBcHBvaW50bWVudHMiLCBpZCA9IGl0ZW0uSWQgfSwgbmV3IHsgQGNsYXNzID0gImJ0biBidG4tZGVmYXVsdCBidG4teHMiIH0pCiAgICAgICAgICAgIEBIdG1sLkFjdGlvbkxpbmsoCiAgICAgICAgICAgICJEZWxldGUiLAogICAgICAgICAgICAiRGVsZXRlIiwKICAgICAgICAgICAgbmV3IHsgQ29udHJvbGxlciA9ICJBcHBvaW50bWVudHMiLCBpZCA9IGl0ZW0uSWQgfSwKICAgICAgICAgICAgbmV3IHsgQGNsYXNzID0gImJ0biBidG4tZGFuZ2VyIGJ0bi14cyIsIG9uY2xpY2sgPSAicmV0dXJuIGNvbmZpcm0oJ0FyZSB5b3Ugc3VyZT8nKTsiIH0pCiAgICAgICAgPC90ZD4KICAgIDwvdHI+Cn0KCjwvdGFibGU+CgpASHRtbC5BY3Rpb25MaW5rKCJOZXciLCAiQ3JlYXRlIiwgbmV3IHsgQ29udHJvbGxlciA9ICJBcHBvaW50bWVudHMiIH0sIG5ldyB7IEBjbGFzcyA9ICJidG4gYnRuLXByaW1hcnkiIH0p</textarea>
 <textarea class="saurus-file" data-file="AppointmentReminders.Web/Controllers/AppointmentsController.cs" data-mode="csharp">77u/dXNpbmcgU3lzdGVtOwp1c2luZyBTeXN0ZW0uTGlucTsKdXNpbmcgU3lzdGVtLk5ldDsKdXNpbmcgU3lzdGVtLldlYi5NdmM7CnVzaW5nIEFwcG9pbnRtZW50UmVtaW5kZXJzLldlYi5Nb2RlbHM7CnVzaW5nIEFwcG9pbnRtZW50UmVtaW5kZXJzLldlYi5Nb2RlbHMuUmVwb3NpdG9yeTsKCm5hbWVzcGFjZSBBcHBvaW50bWVudFJlbWluZGVycy5XZWIuQ29udHJvbGxlcnMKewogICAgcHVibGljIGNsYXNzIEFwcG9pbnRtZW50c0NvbnRyb2xsZXIgOiBDb250cm9sbGVyCiAgICB7CiAgICAgICAgcHJpdmF0ZSByZWFkb25seSBJQXBwb2ludG1lbnRSZXBvc2l0b3J5IF9yZXBvc2l0b3J5OwoKICAgICAgICBwdWJsaWMgQXBwb2ludG1lbnRzQ29udHJvbGxlcigpIDogdGhpcyhuZXcgQXBwb2ludG1lbnRSZXBvc2l0b3J5KCkpIHsgfQoKICAgICAgICBwdWJsaWMgQXBwb2ludG1lbnRzQ29udHJvbGxlcihJQXBwb2ludG1lbnRSZXBvc2l0b3J5IHJlcG9zaXRvcnkpCiAgICAgICAgewogICAgICAgICAgICBfcmVwb3NpdG9yeSA9IHJlcG9zaXRvcnk7CiAgICAgICAgfQoKICAgICAgICBwdWJsaWMgU2VsZWN0TGlzdEl0ZW1bXSBUaW1lem9uZXMKICAgICAgICB7CiAgICAgICAgICAgIGdldAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICB2YXIgc3lzdGVtVGltZVpvbmVzID0gVGltZVpvbmVJbmZvLkdldFN5c3RlbVRpbWVab25lcygpOwogICAgICAgICAgICAgICAgcmV0dXJuIHN5c3RlbVRpbWVab25lcy5TZWxlY3Qoc3lzdGVtVGltZVpvbmUgPT4gbmV3IFNlbGVjdExpc3RJdGVtCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgVGV4dCA9IHN5c3RlbVRpbWVab25lLkRpc3BsYXlOYW1lLAogICAgICAgICAgICAgICAgICAgIFZhbHVlID0gc3lzdGVtVGltZVpvbmUuSWQKICAgICAgICAgICAgICAgIH0pLlRvQXJyYXkoKTsKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgLy8gR0VUOiBBcHBvaW50bWVudHMKICAgICAgICBwdWJsaWMgQWN0aW9uUmVzdWx0IEluZGV4KCkKICAgICAgICB7CiAgICAgICAgICAgIHZhciBhcHBvaW50bWVudHMgPSBfcmVwb3NpdG9yeS5GaW5kQWxsKCk7CiAgICAgICAgICAgIHJldHVybiBWaWV3KGFwcG9pbnRtZW50cyk7CiAgICAgICAgfQoKICAgICAgICAvLyBHRVQ6IEFwcG9pbnRtZW50cy9EZXRhaWxzLzUKICAgICAgICBwdWJsaWMgQWN0aW9uUmVzdWx0IERldGFpbHMoaW50PyBpZCkKICAgICAgICB7CiAgICAgICAgICAgIGlmIChpZCA9PSBudWxsKQogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICByZXR1cm4gbmV3IEh0dHBTdGF0dXNDb2RlUmVzdWx0KEh0dHBTdGF0dXNDb2RlLkJhZFJlcXVlc3QpOwogICAgICAgICAgICB9CgogICAgICAgICAgICB2YXIgYXBwb2ludG1lbnQgPSBfcmVwb3NpdG9yeS5GaW5kQnlJZChpZC5WYWx1ZSk7CiAgICAgICAgICAgIGlmIChhcHBvaW50bWVudCA9PSBudWxsKQogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICByZXR1cm4gSHR0cE5vdEZvdW5kKCk7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHJldHVybiBWaWV3KGFwcG9pbnRtZW50KTsKICAgICAgICB9CgogICAgICAgIC8vIEdFVDogQXBwb2ludG1lbnRzL0NyZWF0ZQogICAgICAgIHB1YmxpYyBBY3Rpb25SZXN1bHQgQ3JlYXRlKCkKICAgICAgICB7CiAgICAgICAgICAgIFZpZXdCYWcuVGltZXpvbmVzID0gVGltZXpvbmVzOwogICAgICAgICAgICAvLyBVc2UgYW4gZW1wdHkgYXBwb2ludG1lbnQgdG8gc2V0dXAgdGhlIGRlZmF1bHQKICAgICAgICAgICAgLy8gdmFsdWVzLgogICAgICAgICAgICB2YXIgYXBwb2ludG1lbnQgPSBuZXcgQXBwb2ludG1lbnQKICAgICAgICAgICAgewogICAgICAgICAgICAgICAgVGltZXpvbmUgPSAiUGFjaWZpYyBTdGFuZGFyZCBUaW1lIiwKICAgICAgICAgICAgICAgIFRpbWUgPSBEYXRlVGltZS5Ob3cKICAgICAgICAgICAgfTsKCiAgICAgICAgICAgIHJldHVybiBWaWV3KGFwcG9pbnRtZW50KTsKICAgICAgICB9CgogICAgICAgIFtIdHRwUG9zdF0KICAgICAgICBwdWJsaWMgQWN0aW9uUmVzdWx0IENyZWF0ZShbQmluZChJbmNsdWRlPSJJRCxOYW1lLFBob25lTnVtYmVyLFRpbWUsVGltZXpvbmUiKV1BcHBvaW50bWVudCBhcHBvaW50bWVudCkKICAgICAgICB7CiAgICAgICAgICAgIGFwcG9pbnRtZW50LkNyZWF0ZWRBdCA9IERhdGVUaW1lLk5vdzsKCiAgICAgICAgICAgIGlmIChNb2RlbFN0YXRlLklzVmFsaWQpCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIF9yZXBvc2l0b3J5LkNyZWF0ZShhcHBvaW50bWVudCk7CgogICAgICAgICAgICAgICAgcmV0dXJuIFJlZGlyZWN0VG9BY3Rpb24oIkRldGFpbHMiLCBuZXcge2lkID0gYXBwb2ludG1lbnQuSWR9KTsKICAgICAgICAgICAgfQoKICAgICAgICAgICAgcmV0dXJuIFZpZXcoIkNyZWF0ZSIsIGFwcG9pbnRtZW50KTsKICAgICAgICB9CgogICAgICAgIC8vIEdFVDogQXBwb2ludG1lbnRzL0VkaXQvNQogICAgICAgIFtIdHRwR2V0XQogICAgICAgIHB1YmxpYyBBY3Rpb25SZXN1bHQgRWRpdChpbnQ/IGlkKQogICAgICAgIHsKICAgICAgICAgICAgaWYgKGlkID09IG51bGwpCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIHJldHVybiBuZXcgSHR0cFN0YXR1c0NvZGVSZXN1bHQoSHR0cFN0YXR1c0NvZGUuQmFkUmVxdWVzdCk7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHZhciBhcHBvaW50bWVudCA9IF9yZXBvc2l0b3J5LkZpbmRCeUlkKGlkLlZhbHVlKTsKICAgICAgICAgICAgaWYgKGFwcG9pbnRtZW50ID09IG51bGwpCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIHJldHVybiBIdHRwTm90Rm91bmQoKTsKICAgICAgICAgICAgfQoKICAgICAgICAgICAgVmlld0JhZy5UaW1lem9uZXMgPSBUaW1lem9uZXM7CiAgICAgICAgICAgIHJldHVybiBWaWV3KGFwcG9pbnRtZW50KTsKICAgICAgICB9CgogICAgICAgIC8vIFBPU1Q6IC9BcHBvaW50bWVudHMvRWRpdC81CiAgICAgICAgW0h0dHBQb3N0XQogICAgICAgIHB1YmxpYyBBY3Rpb25SZXN1bHQgRWRpdChbQmluZChJbmNsdWRlID0gIklELE5hbWUsUGhvbmVOdW1iZXIsVGltZSxUaW1lem9uZSIpXSBBcHBvaW50bWVudCBhcHBvaW50bWVudCkKICAgICAgICB7CiAgICAgICAgICAgIGlmIChNb2RlbFN0YXRlLklzVmFsaWQpCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIF9yZXBvc2l0b3J5LlVwZGF0ZShhcHBvaW50bWVudCk7CiAgICAgICAgICAgICAgICByZXR1cm4gUmVkaXJlY3RUb0FjdGlvbigiRGV0YWlscyIsIG5ldyB7IGlkID0gYXBwb2ludG1lbnQuSWQgfSk7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgcmV0dXJuIFZpZXcoYXBwb2ludG1lbnQpOwogICAgICAgIH0KCiAgICAgICAgLy8gR0VUOiBBcHBvaW50bWVudHMvRGVsZXRlLzUKICAgICAgICBbSHR0cEdldF0KICAgICAgICBwdWJsaWMgQWN0aW9uUmVzdWx0IERlbGV0ZShpbnQgaWQpCiAgICAgICAgewogICAgICAgICAgICBfcmVwb3NpdG9yeS5EZWxldGUoaWQpOwogICAgICAgICAgICByZXR1cm4gUmVkaXJlY3RUb0FjdGlvbigiSW5kZXgiKTsKICAgICAgICB9CiAgICB9Cn0=</textarea>

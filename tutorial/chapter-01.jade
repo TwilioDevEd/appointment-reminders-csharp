@@ -33,50 +33,78 @@
 .step(data-title='The User Story')
   h2 Creating an Appointment
   blockquote
-    | As a user, I want to create an appointment with a name, guest phone numbers, and a time in the future.
+    | As a user, I want to create an appointment with a name, guest phone
+    | numbers, and a time in the future.
   :markdown
-    In order to build an automated appointment reminder app, we probably should start with an appointment. This story requires that we create a bit of UI and a model object to create and save a new `Appointment` in our system. At a high level, here's what we will need to add:
+    In order to build an automated appointment reminder application, we
+    probably should start with an appointment. This story requires that we
+    create a bit of UI and a model object to create and save a new `Appointment`
+    in our system. At a high level, here's what we will need to add:
 
     * A form to enter details about the appointment
-    * A route and controller function on the server to render the form 
-    * A route and controller function on the server to handle the form POST request
-    * A persistent `Appointment` model object to store information about the user 
+    * A route and controller function on the server to render the form
+    * A route and controller function on the server to handle the form POST
+    request
+    * A persistent `Appointment` model object to store information about the
+    user
 
-    Let's start by looking at the model, where we decide what information we want to store with the appointment.
+    Let's start by looking at the model, where we decide what information we
+    want to store with the appointment.
 
-.step(data-title='Appointment Model', data-file='AppointmentReminders.Web/Models/Appointment.cs')
+.step(data-title='Appointment Model',
+data-file='AppointmentReminders.Web/Models/Appointment.cs',
+data-highlight="7-26")
   :markdown
     ## Appointment Model
 
-    The appointment model is pretty simple out of the box, but since humans will be interacting with it let's make sure we add some data validation.
+    The appointment model is fairly straightforward, but since humans will be
+    interacting with it let's make sure we add some data validation.
 
     *Data Validation*
 
-    Validations are important since we want to make sure only accurate data is
-    being saved into our database. In this case, we only want to validate that
-    all of our required fields are present. We can do this by using `[Required]`
-    data annotation.
+    Validations are important, we don't want to have invalid data in our
+    application. To do this job we're relying on [ASP.NET Data
+    Annotations](http://www.asp.net/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6).
+    In our case, we only want to validate that some fields required. To do this
+    job we're gonna use `[Required]` data annotation.
 
-    It is likely that our Appointment Model would be created by an admin person
-    at the site of the appointment. Well it would be great if we could give our
+    By default ASP.NET MVC displays the property name when rendering a control.
+    (*In our example those property names can be `Name` or `PhoneNumber`*). As
+    you can see, for rendering `Name` there shoudn't be any problem, but for
+    `PhoneNumber` that's not the case, we might want to have something like
+    **Phone Number**. For this kind of scenarios we can use another data
+    annotation `[Display(Name = "NAME_TO_BE_DISPLAYED"]` where `Name` will
+    contain the value to be displayed.
+
+    Well, for validating the `PhoneNumber` we're using `[Phone]` data
+    annotation.
+
+    It is likely that our Appointment model would be created by an admin person
+    at the site of the appointment. Well, it would be great if we could give our
     admin user some feedback when they create the appointment. In ASP.NET MVC we
     can take advantage of the built-in validation, if there are errores those
     will be displayed in the form.
 
-    One note: in order to run this demo you would need to run `Update-Database`
-    which would run the migrations in our AppointmentReminders.Web/Migrations
-    folderAppointmentReminders.Web. For this tutorial we're gonna focus on the
-    core concepts but if you want to learn more about migrations you can read
-    the [ASP.NET MVC
-    guide](http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application)
-    on the subject.
+.step(data-title="Running Migrations",
+data-file="AppointmentReminders.Web/Migrations/201507011415152_InitialCreate.cs",
+data-highlight="6-28")
+  :markdown
+    ## Running Migrations
+    In this project we're using [code first
+    migrations](http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application)
+    so that, in order to run this demo you need to run `Update-Database`.
 
-    Now we're ready to move up to the controller level of the application.
+    ```
+    PM > Update-Database
+    ```
 
+    Once you run the migration, the project will have a hidden file under *App
+    Data* since we're using an embedded database.
+
+    Now we're ready to move up to the view level of the application.
 
 .step(data-title='New Appointment Form',
   data-file='AppointmentReminders.Web/Views/Appointments/_Form.cshtml',
-  data-highlight='6-7',
   data-mode='html')
   :markdown
     ## New Appointment Form
@@ -84,8 +112,26 @@
     When we create a new appointment, we need a guest name, a phone number and a
     time. By using [HTML Helper
     classes](https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx)
-    we can bind the form to the model object. This will generate the necessary
-    html markup that will create a new Appointment on submit.
+    we can bind the form to the model object. Those helpers will generate the
+    necessary html markup that will create a new Appointment on submit.
 
     Let's point out one specific helper class that ASP.NET MVC gives us for
     model-bound forms.
+
+.step(data-title='HTML Helpers',
+  data-file='AppointmentReminders.Web/Views/Appointments/_Form.cshtml',
+  data-highlight='7-8',
+  data-mode='html')
+  :markdown
+    ## HTML Helpers
+
+    To render text boxes we're using the helper `TextBoxFor` and for render the
+    necesary validation messages *if they are necessary* we'll use
+    `ValidationMessageFor`.
+
+    If you want to see the details of how to use HTML Extensions, please have a
+    look in their
+    [documentation](https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx).
+
+    Now we have the basic building blocks to work interact with our
+    appointments, let's have a look on that.

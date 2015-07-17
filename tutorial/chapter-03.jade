@@ -8,11 +8,11 @@
       matter how you implement it there should be two moving parts:
 
       * A script that checks the database for any appointment that is upcoming,
-      then sends an sms.
+      and then sends a SMS.
       * A worker that runs that script continuously.
 
       Let's take a look at how we decided to implement the latter
-      with[Hangfire](http://hangfire.io/).
+      with [Hangfire](http://hangfire.io/).
 
 .step(data-title='Working with Hangfire',
 data-file='AppointmentReminders.Web/packages.config', data-language="xml", data-highlight='7-9')
@@ -77,7 +77,7 @@ data-highlight="8-15")
     1. Let Hangfire know which **connection string** to use to handle
        persistence, in our example we're using the beloved `DefaultConnection`.
     2. Configuring the endpoint for Hangfire Dashboard. So, if you're running
-       our application locally we can see the dashboard by typing
+       our application locally you can see the dashboard by typing
        **localhost:1474/jobs** in your browser.
     3. Starting Hangfire Server.
 
@@ -96,14 +96,14 @@ data-highlight="17-20")
     `Workers.SendNotificationsJob`. Hold your horses!, we'll discuss about
     the implementation of this **job** in a few moments.
 
-    In this method we're telling to Hangfire which method should be executed, in our
+    In this method we're telling Hangfire which method should be executed, in our
     example the method is `Execute`, quite obvious right?. Also we're specifying
     the job's frecuency of execution. If you want to dive into more details you
     can check out [how to perform recurring
     tasks](http://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html).
 
-    I think this configuration is quite simple, but this configuration is
-    incomplete. Let's find out what we need to finish with this configuration.
+    I think this configuration is quite simple, but it's incomplete. Let's find
+    out what we're missing to get it rolling.
 
 .step(data-title="Putting the Pieces Together",
 data-file="AppointmentReminders.Web/Startup.cs", data-language="c#",
@@ -113,9 +113,9 @@ data-highlight="4-15")
 
     ### Putting the Pieces Together
 
-    All the work we made on our precious `Hangfire` class is useless we have a
-    place where we can use the methods `ConfigureHangfire` and `InitializeJobs`,
-    for that reason we have the `Startup` class.
+    All the work we made on our precious `Hangfire` class is useless unless we
+    have a place where we can employ the methods `ConfigureHangfire` and
+    `InitializeJobs`, for that reason we have the `Startup` class.
 
     ASP.NET is an OWIN-based application, for that reason we're using the
     following line `[assembly:
@@ -134,7 +134,7 @@ data-language="c#", data-highlight="20-30")
     For finding future appointments we are relying on `AppointmentsFinder`. More
     explictly we'll use the method `FindAvailableAppointments` to do the hard
     work. `FindAvailableAppointmets` just filter in all the appointments that
-    are need to be sent.
+    require to be sent.
 
     Now, the obvious question is how do we determine if an appointment needs to
     be sent or not. To do this job we make out `AppointmentsNotificationPolicy`.
@@ -144,9 +144,9 @@ data-language="c#", data-highlight="20-30")
 data-file="AppointmentReminders.Web/Domain/AppointmentsNotificationPolicy.cs",
 data-language="c#", data-highlight="6-30")
   :markdown
-    ## Which Appointments Needs to be Sent
+    ## Which Appointments Require to be Sent
 
-    The responsability of this class is to figure out if an appointment needs to
+    The responsability of this class is to figure out if an appointment has to
     be sent based on the appointments time.
 
     There one constraint, we want to sent the appointment 30 minutes before of
@@ -156,7 +156,7 @@ data-language="c#", data-highlight="6-30")
     from that time. If the reminder time is equal to the **current local time**
     then the appointment is elegible to be sent. Easy peasy, right?
 
-    ... wait! We need to take care of the timezone. Let's see how to deal with
+    ... wait! We should be aware of the timezone. Let's see how to deal with
     this particular problem.
 
 .step(data-title="Dealing with Different Timezones",
@@ -224,9 +224,10 @@ data-language="c#", data-highlight="6-23")
 
     ## All Done
 
-    As you saw, some little of configuration and we're ready to get automated
+    As you saw, some minor configuration and we're ready to get automated
     appointment reminders firing with Twilio. Be sure to check out the project
-    buttons above to download the source for this application, view it on GitHub.
+    buttons above to download the source code for this application, view it on
+    GitHub.
 
     We'd also love to hear your feedback on this tutorial - [please reach out to
     us](mailto:help@twilio.com) with any questions you might have.  Thanks for
