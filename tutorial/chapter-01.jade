@@ -4,9 +4,12 @@
 
     Ready to implement appointment reminders in your application? Here's how it works at a high level:
 
-      1. An administrator creates an appointment for a future date and time, and stores a customer's phone number in the database for that appointment
-      1. A background process checks the database on a regular interval, looking for appointments that require a reminder to be sent out
-      1. At a configured time in advance of the appointment, an SMS reminder is sent out to the customer to remind them of their appointment
+      1. An administrator creates an appointment for a future date and time, and
+         stores a customer's phone number in the database for that appointment
+      1. A background process checks the database on a regular interval, looking
+         for appointments that require a reminder to be sent out
+      1. At a configured time in advance of the appointment, an SMS reminder is
+         sent out to the customer to remind them of their appointment
 
     ## Building Blocks
 
@@ -18,7 +21,11 @@
 
     ## How To Read This Tutorial
 
-    To implement appointment reminders, we will be working through a series of [user stories](http://en.wikipedia.org/wiki/User_story) that describe how to fully implement appointment reminders in a web application. We'll walk through the code required to satisfy each story, and explore what we needed to add at each step.
+    To implement appointment reminders, we will be working through a series of
+    [user stories](http://en.wikipedia.org/wiki/User_story) that describe how to
+    fully implement appointment reminders in a web application. We'll walk
+    through the code required to satisfy each story, and explore what we needed
+    to add at each step.
 
     Let's get started! Click the right arrow to move on to the next step of the tutorial.
 
@@ -26,9 +33,14 @@
   :markdown
     ## About This Tutorial
 
-    In this tutorial, we will be working through a series of [user stories](http://en.wikipedia.org/wiki/User_story) that describe how to fully implement account verification in a web application. Our team implemented this example application in about 12 story points (roughly equivalent to 12 working hours).
+    In this tutorial, we will be working through a series of [user
+    stories](http://en.wikipedia.org/wiki/User_story) that describe how to fully
+    implement account verification in a web application. Our team implemented
+    this example application in about 12 story points (roughly equivalent to 12
+    working hours).
 
-    Let's get started with our first user story around creating a new user account.
+    Let's get started with our first user story around creating a new
+    appointment.
 
 .step(data-title='The User Story')
   h2 Creating an Appointment
@@ -65,12 +77,12 @@ data-highlight="7-26")
     Validations are important, we don't want to have invalid data in our
     application. To do this job we're relying on [ASP.NET Data
     Annotations](http://www.asp.net/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6).
-    In our case, we only want to validate that some fields required. To do this
-    job we're gonna use `[Required]` data annotation.
+    In our case, we only want to validate that some fields are required. To
+    accomplish this we'll use `[Required]` data annotation.
 
     By default ASP.NET MVC displays the property name when rendering a control.
     (*In our example those property names can be `Name` or `PhoneNumber`*). As
-    you can see, for rendering `Name` there shoudn't be any problem, but for
+    you can see, for rendering `Name` there shouldn't be any problem, but for
     `PhoneNumber` that's not the case, we might want to have something like
     **Phone Number**. For this kind of scenarios we can use another data
     annotation `[Display(Name = "NAME_TO_BE_DISPLAYED"]` where `Name` will
@@ -82,7 +94,7 @@ data-highlight="7-26")
     It is likely that our Appointment model would be created by an admin person
     at the site of the appointment. Well, it would be great if we could give our
     admin user some feedback when they create the appointment. In ASP.NET MVC we
-    can take advantage of the built-in validation, if there are errores those
+    can take advantage of the built-in validation, if there are errors those
     will be displayed in the form.
 
 .step(data-title="Running Migrations",
@@ -92,13 +104,13 @@ data-highlight="6-28")
     ## Running Migrations
     In this project we're using [code first
     migrations](http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application)
-    so that, in order to run this demo you need to run `Update-Database`.
+    so in order to run this demo you have to execute `Update-Database`.
 
     ```
     PM > Update-Database
     ```
 
-    Once you run the migration, the project will have a hidden file under *App
+    Once migration is completed, the project will have a hidden file under *App
     Data* since we're using an embedded database.
 
     Now we're ready to move up to the view level of the application.

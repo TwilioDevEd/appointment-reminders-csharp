@@ -41,9 +41,9 @@ data-mode="html", data-highlight="47-52")
   :markdown
     ## View All Appointments
 
-    The index view lists all of the appointments which are automatically ordered
-    by `Id`. The only thing we need to add to fulfill our user story is a delete
-    button. We'll add the edit button just for kicks.
+    The index view lists all appointments which are sorted by `Id`. The only
+    thing we need to add to fulfill our user story is a delete button. We'll add
+    the edit button just for kicks.
 
     *HTML Helpers*
 
@@ -53,13 +53,13 @@ data-mode="html", data-highlight="47-52")
     If you view the rendered markup you will see these paths.
 
     * `/Appointments/Edit/(some ID)` for edit
-    * `/appointments/Delete/(some ID)` for delete
+    * `/Appointments/Delete/(some ID)` for delete
 
-    For delete action we use a confirm message by adding an *onlick* statement,
-    explicitly this `onclick = "return confirm('Are you sure?');"` so that
-    when the user attempts to delete an appointment a javascript confirm will
-    be shown, if the user confirms the action then the appointment is deleted,
-    otherwise no action will be taken.
+    For delete action we use a confirmation message by adding an *onlick*
+    statement, explicitly this `onclick = "return confirm('Are you sure?');"`
+    so that when the user attempts to delete an appointment a javascript
+    confirmation will be shown, if the user confirms the action then the
+    appointment is deleted, otherwise no action will be taken.
 
     Now let's take a look at what happens when an appointment is actually deleted.
 
@@ -85,5 +85,5 @@ data-highlight="121-125")
 
     Now that we have the appointment, we simply need to call `Delete` on it.
 
-    Now that we can interact with our appointments, let's dive into sending out
-    reminders when one of these appointments is coming up.
+    Now that we can interact with our appointments, let's dive into sending
+    reminders when an appointment is coming up.

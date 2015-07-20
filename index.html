@@ -113,21 +113,35 @@ testeable. If you&#39;re not familiar with this pattern, we highly recommend you
 to check this <a href="http://www.codeproject.com/Articles/526874/Repositorypluspattern-cplusdoneplusright">post</a>
 out.</p>
 </div><div data-title="View all Appointments" data-file="AppointmentReminders.Web/Views/Appointments/Index.cshtml" data-mode="html" data-highlight="47-52" class="step"><h2 id="view-all-appointments">View All Appointments</h2>
-<p>The index view lists all of the appointments which are automatically ordered by <code>Id</code>. The only thing we need to add to fulfill our user story is a delete button. We&#39;ll add the edit button just for kicks.</p>
+<p>The index view lists all of the appointments which are automatically ordered
+by <code>Id</code>. The only thing we need to add to fulfill our user story is a delete
+button. We&#39;ll add the edit button just for kicks.</p>
 <p><em>HTML Helpers</em></p>
-<p>You may notice that instead of hard-coding the urls for Edit and Delete we are using a ASP.NET MVC <a href="https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx">HTML Helpers</a>. If you view the rendered markup you will see these paths:</p>
+<p>You may notice that instead of hard-coding the urls for Edit and Delete we
+are using a ASP.NET MVC <a href="https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx">HTML
+Helpers</a>.
+If you view the rendered markup you will see these paths.</p>
 <ul>
 <li><code>/Appointments/Edit/(some ID)</code> for edit</li>
 <li><code>/appointments/Delete/(some ID)</code> for delete</li>
 </ul>
-<p>For delete action we use a confirm message by adding an <em>onlick</em> statement, explicitly this <code>onclick = &quot;return confirm(&#39;Are you sure?&#39;);&quot;</code> so that when the user attempts to delete an appointment a javascript confirm will be shown, if the user confirms the action then the appointment is deleted, otherwise no action will be taken.</p>
+<p>For delete action we use a confirm message by adding an <em>onlick</em> statement,
+explicitly this <code>onclick = &quot;return confirm(&#39;Are you sure?&#39;);&quot;</code> so that
+when the user attempts to delete an appointment a javascript confirm will
+be shown, if the user confirms the action then the appointment is deleted,
+otherwise no action will be taken.</p>
 <p>Now let&#39;s take a look at what happens when an appointment is actually deleted.</p>
 </div><div data-title="Looking up an Appointment" data-file="AppointmentReminders.Web/Controllers/AppointmentsController.cs" data-highlight="41-56" class="step"><h2 id="looking-up-the-appointment">Looking up the Appointment</h2>
-<p>In this controller we need to pull up an appointment record and then delete it. Let&#39;s take a look at how we&#39;re grabbing the appointment first.</p>
-<p>There is some standard check going over here, if there is not an ID to look for, then the controller responds <code>Bad Request</code>, in the other hand if an ID is passed but it doesn&#39;t match with any of the appointments in the database then the controller responds <code>Not Found</code>.</p>
+<p>In this controller we need to pull up an appointment record and then delete
+it. Let&#39;s take a look at how we&#39;re grabbing the appointment first.</p>
+<p>There is some standard check going over here, if there is not an ID to look
+for, then the controller responds <code>Bad Request</code>, in the other hand if an ID
+is passed but it doesn&#39;t match with any of the appointments in the
+database then the controller responds <code>Not Found</code>.</p>
 </div><div data-title="Deleting an Appointment" data-file="AppointmentReminders.Web/Controllers/AppointmentsController.cs" data-highlight="121-125" class="step"><h2 id="deleting-an-appointment">Deleting an Appointment</h2>
 <p>Now that we have the appointment, we simply need to call <code>Delete</code> on it.</p>
-<p>Now that we can interact with our appointments, let&#39;s dive into sending out reminders when one of these appointments is coming up.</p>
+<p>Now that we can interact with our appointments, let&#39;s dive into sending out
+reminders when one of these appointments is coming up.</p>
 </div></div><div data-title="Send a Reminder" class="chapter"><div data-title="Setting the Reminder" class="step"><blockquote>As an appointment system, I want to notify a user via SMS an arbitrary<interval>before a future appointment.</interval></blockquote><p>There are a lot of ways to build this part of our application, but no
 matter how you implement it there should be two moving parts:</p>
 <ul>
