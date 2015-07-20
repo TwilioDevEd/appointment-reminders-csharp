@@ -275,8 +275,14 @@ var autoShowExplorer = 1280;
 
 // Helper to generate an HTML string for a leaf file in the explorer
 function createFileListItem(fileName, fullPath) {
+    // create truncated file name
+    var truncFileName = fileName;
+    if (truncFileName.length > 25) {
+        truncFileName = '...' + fileName.substring(fileName.length-25);
+    }
     var html = '<li class="saurus-explorer-file" data-file="' + fullPath + '">';
-    html += '<i class="fa fa-fw fa-file-text-o"></i>&nbsp;' + fileName + '</li>';
+    html += '<i class="fa fa-fw fa-file-text-o"></i>&nbsp;' 
+        + truncFileName + '</li>';
     return html;
 }
 
@@ -353,9 +359,17 @@ var ExplorerView = Backbone.View.extend({
 
         // Iterate folders to create HTML structure
         for (var folder in folders) {
+            // create truncated folder name
+            var truncFolderName = folder;
+            if (truncFolderName.length > 25) {
+                var f = truncFolderName.split('/');
+                var fn = f.shift();
+                truncFolderName = fn.substring(0, 3) + '.../' +f.join('/');
+            }
+
             html += '<li class="saurus-explorer-folder">';
             html += '<i class="fa fa-fw fa-folder-o"></i>';
-            html += '&nbsp;' + folder + '<ul>'
+            html += '&nbsp;' + truncFolderName + '<ul>'
             var files = folders[folder];
             for (var i = 0, l = files.length; i<l; i++) {
                 var fileData = files[i];

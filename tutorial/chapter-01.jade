@@ -72,48 +72,24 @@ data-highlight="7-26")
     The appointment model is fairly straightforward, but since humans will be
     interacting with it let's make sure we add some data validation.
 
-    *Data Validation*
-
-    Validations are important, we don't want to have invalid data in our
-    application. To do this job we're relying on [ASP.NET Data
+    Our application relies on [ASP.NET Data
     Annotations](http://www.asp.net/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6).
     In our case, we only want to validate that some fields are required. To
     accomplish this we'll use `[Required]` data annotation.
 
-    By default ASP.NET MVC displays the property name when rendering a control.
-    (*In our example those property names can be `Name` or `PhoneNumber`*). As
-    you can see, for rendering `Name` there shouldn't be any problem, but for
-    `PhoneNumber` that's not the case, we might want to have something like
-    **Phone Number**. For this kind of scenarios we can use another data
-    annotation `[Display(Name = "NAME_TO_BE_DISPLAYED"]` where `Name` will
-    contain the value to be displayed.
+    By default, ASP.NET MVC displays the property name when rendering a control.
+    (*In our example those property names can be `Name` or `PhoneNumber`*). 
+    For rendering `Name` there shouldn't be any problem. But for
+    `PhoneNumber` we might want to display something nicer, like
+    "Phone Number". For this kind of scenario we can use another data
+    annotation: `[Display(Name = "Phone Number")]`.
 
-    Well, for validating the `PhoneNumber` we're using `[Phone]` data
-    annotation.
+    For validating the contents of the `PhoneNumber` field, we're using `[Phone]` data
+    annotation, which confirms user-entered phone numbers conform loosely to
+    [E.164 formatting standards](https://en.wikipedia.org/wiki/E.164).
 
-    It is likely that our Appointment model would be created by an admin person
-    at the site of the appointment. Well, it would be great if we could give our
-    admin user some feedback when they create the appointment. In ASP.NET MVC we
-    can take advantage of the built-in validation, if there are errors those
-    will be displayed in the form.
-
-.step(data-title="Running Migrations",
-data-file="AppointmentReminders.Web/Migrations/201507011415152_InitialCreate.cs",
-data-highlight="6-28")
-  :markdown
-    ## Running Migrations
-    In this project we're using [code first
-    migrations](http://www.asp.net/mvc/overview/getting-started/getting-started-with-ef-using-mvc/migrations-and-deployment-with-the-entity-framework-in-an-asp-net-mvc-application)
-    so in order to run this demo you have to execute `Update-Database`.
-
-    ```
-    PM > Update-Database
-    ```
-
-    Once migration is completed, the project will have a hidden file under *App
-    Data* since we're using an embedded database.
-
-    Now we're ready to move up to the view level of the application.
+    Now that we have our model set up, let's take a look at the form which allows
+    an administrator to create new appointments.
 
 .step(data-title='New Appointment Form',
   data-file='AppointmentReminders.Web/Views/Appointments/_Form.cshtml',
@@ -125,25 +101,7 @@ data-highlight="6-28")
     time. By using [HTML Helper
     classes](https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx)
     we can bind the form to the model object. Those helpers will generate the
-    necessary html markup that will create a new Appointment on submit.
+    necessary HTML markup that will create a new appointment on submit.
 
-    Let's point out one specific helper class that ASP.NET MVC gives us for
-    model-bound forms.
-
-.step(data-title='HTML Helpers',
-  data-file='AppointmentReminders.Web/Views/Appointments/_Form.cshtml',
-  data-highlight='7-8',
-  data-mode='html')
-  :markdown
-    ## HTML Helpers
-
-    To render text boxes we're using the helper `TextBoxFor` and for render the
-    necesary validation messages *if they are necessary* we'll use
-    `ValidationMessageFor`.
-
-    If you want to see the details of how to use HTML Extensions, please have a
-    look in their
-    [documentation](https://msdn.microsoft.com/en-us/library/system.web.mvc.htmlhelper.aspx).
-
-    Now we have the basic building blocks to work interact with our
-    appointments, let's have a look on that.
+    Now that we have an interface to create new appointments, let's see how we
+    view and manage a list of all created appointments.

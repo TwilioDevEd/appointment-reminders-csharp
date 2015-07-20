@@ -1,234 +1,105 @@
-.step(data-title='Setting the Reminder')
-    blockquote
-      | As an appointment system, I want to notify a user via SMS an arbitrary
-      interval before a future appointment.
+.step(data-title='Sending Reminders')
+  h2 Sending Reminders
 
-    :markdown
-      There are a lot of ways to build this part of our application, but no
-      matter how you implement it there should be two moving parts:
+  blockquote.
+    As an appointment system, I want to notify a user via SMS an arbitrary 
+    interval before a future appointment.
 
-      * A script that checks the database for any appointment that is upcoming,
-      and then sends a SMS.
-      * A worker that runs that script continuously.
+  :markdown
+    There are a lot of ways to build this part of our application, but no
+    matter how you implement it there should be two moving parts:
 
-      Let's take a look at how we decided to implement the latter
-      with [Hangfire](http://hangfire.io/).
+    * A script that checks the database for any appointment that is upcoming,
+    and then sends a SMS.
+    * A worker that runs that script continuously.
+
+    Let's take a look at how we decided to implement the latter
+    with [Hangfire](http://hangfire.io/).
 
 .step(data-title='Working with Hangfire',
-data-file='AppointmentReminders.Web/packages.config', data-language="xml", data-highlight='7-9')
+  data-file='AppointmentReminders.Web/packages.config', data-mode="xml", 
+  data-highlight='7-9')
   :markdown
     ## Working with Hangfire
 
-    There are a lot of ways to implement a scheduler/worker, there is a nice
-    [post](http://www.hanselman.com/blog/HowToRunBackgroundTasksInASPNET.aspx)
-    by Scott Hanselman that shows a few ways to run background tasks in ASP.NET
-    MVC. We decided to use Hanfire because of its simplicity. If you have a
-    better way to schedule jobs in ASP.NET MVC please let [us know](mailto:
-    help@twilio.com).
+    If you've never used a job scheduler before, 
+    [you may want to check out this post by Scott Hanselman](http://www.hanselman.com/blog/HowToRunBackgroundTasksInASPNET.aspx)
+     that shows a few ways to run background tasks in ASP.NET
+    MVC. We decided to use Hangfire because of its simplicity. If you have a
+    better way to schedule jobs in ASP.NET MVC please [let us know](mailto:
+    devedoss@twilio.com).
 
     Hangfire needs a backend of some kind to queue the upcoming jobs. In this
     implmentation we're using [SQL Server
     Database](http://docs.hangfire.io/en/latest/configuration/using-sql-server.html),
-    but it's possible to use a different approach. You can check their
+    but it's possible to use a different data store. You can check their
     [documentation](http://docs.hangfire.io/en/latest/configuration/index.html)
     for further details.
 
-    To install Hanfire you can either use:
-
-    **Package Manager Console**
-
-    `PM> Install-Package Hangfire`
-
-    or **Nuget Package Manager**
-
-    More information about Hanfire installation can be found
-    [here](http://docs.hangfire.io/en/latest/installation.html).
-
-    Let's take a look on how to **configure Hangfire** to use it in our appointment
+    Let's take a look at how to configure Hangfire to use it in our appointment
     reminders application.
 
-.step(data-title="Hangfire, The Configuration Class"
-data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
-data-highlight="6-21")
+.step(data-title="Hangfire Configuration Class"
+  data-file="AppointmentReminders.Web/App_Start/Hangfire.cs")
   :markdown
-    ## Configuring Hangfire
+    ## Hangfire Configuration Class
 
-    ###  Hangfire, The Configuration Class
+    We created a class named `Hangfire` to configure our job scheduler. This class
+    defines two static methods:
 
-    To keep it simple we extracted a class named `Hangfire` to encapsulate the
-    setup of Hangfire, we defined 2 static methods.
+    1. `ConfigureHangfire` to set initialization parameters for the job scheduler.
+    2. `InitialzeJobs` to specify which recurring jobs should be run, and how often they should run.
 
-    1. **ConfigureHangfire**. To manage the nitty-gritty details of the
-       configuration.
-    2. **InitialzeJobs**. To be responsible for initialize the recurring jobs.
+    Next, let's take a quick look at how we start up the job scheduler.
 
-    Let's see what does `ConfigureHangfire` do in detail.
-
-.step(data-title="The Setup Method",
-data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
-data-highlight="8-15")
+.step(data-title="Starting the Job Scheduler",
+  data-file="AppointmentReminders.Web/Startup.cs",
+  data-highlight="4-15")
   :markdown
-    ## Configuring Hangfire
+    ## Starting the Job Scheduler
 
-    ### The Setup Method
+    This ASP.NET MVC project is an [OWIN-based application](http://www.asp.net/aspnet/overview/owin-and-katana/owin-startup-class-detection)
+    , which allows us to create a startup class to run any custom initialization
+    logic required in our application. This is the preferred location to start
+    Hangfire - [check out their configuration docs for more information](http://docs.hangfire.io/en/latest/configuration/).
 
-    Our setup method is `ConfigureHangfire`, this guy is doing the following:
+    Now that we've started the job scheduler, let's take a look at the logic
+    that get's executed when our job runs.
 
-    1. Let Hangfire know which **connection string** to use to handle
-       persistence, in our example we're using the beloved `DefaultConnection`.
-    2. Configuring the endpoint for Hangfire Dashboard. So, if you're running
-       our application locally you can see the dashboard by typing
-       **localhost:1474/jobs** in your browser.
-    3. Starting Hangfire Server.
-
-    Now, let's have a look on `InitializeJobs`.
-
-.step(data-title="Initializing the Jobs",
-data-file="AppointmentReminders.Web/App_Start/Hangfire.cs", data-language="c#",
-data-highlight="17-20")
+.step(data-title="Notification Background Job",
+  data-file="AppointmentReminders.Web/Workers/SendNotificationsJob.cs")
   :markdown
-    ## Configuring Hangfire
+    ## Notification Background Job
 
-    ### Initializing the Jobs
+    In this class, we define a method called `Execute` which is called every
+    minute by Hangfire. Every time the job runs, we need to:
 
-    `InitializeJobs` is responsible for handling the recurring
-    jobs by adding or updating a new job, more explicitly
-    `Workers.SendNotificationsJob`. Hold your horses!, we'll discuss about
-    the implementation of this **job** in a few moments.
+    1. Get a list of upcoming appointments that require notifications to be sent out
+    2. Use Twilio to send appointment reminders via SMS
 
-    In this method we're telling Hangfire which method should be executed, in our
-    example the method is `Execute`, quite obvious right?. Also we're specifying
-    the job's frecuency of execution. If you want to dive into more details you
-    can check out [how to perform recurring
-    tasks](http://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html).
+    The `AppontmentsFinder` class queries our SQL Server database to find all
+    the appointments whose date and time are coming up soon. For each of those
+    appointments, we'll use the Twilio REST API to send out a formatted message.
 
-    I think this configuration is quite simple, but it's incomplete. Let's find
-    out what we're missing to get it rolling.
+    Let's take a look at how we use Twilio to do that next.
 
-.step(data-title="Putting the Pieces Together",
-data-file="AppointmentReminders.Web/Startup.cs", data-language="c#",
-data-highlight="4-15")
+.step(data-title="Twilio REST API Request",
+  data-file="AppointmentReminders.Web/Domain/Twilio/RestClient.cs",
+  data-language="csharp", data-highlight="6-23")
   :markdown
-    ## Configuring Hangfire
+    ## Twilio REST API Request
 
-    ### Putting the Pieces Together
-
-    All the work we made on our precious `Hangfire` class is useless unless we
-    have a place where we can employ the methods `ConfigureHangfire` and
-    `InitializeJobs`, for that reason we have the `Startup` class.
-
-    ASP.NET is an OWIN-based application, for that reason we're using the
-    following line `[assembly:
-    OwinStartup(typeof(AppointmentReminders.Web.Startup))]` in our OWIN Startup
-    class.
-
-    For further references you can take a look at [Hangfire
-      Configuration](http://docs.hangfire.io/en/latest/configuration/).
-
-.step(data-title="Looking for Future Appointments",
-data-file="AppointmentReminders.Web/Domain/AppointmentsFinder.cs",
-data-language="c#", data-highlight="20-30")
-  :markdown
-    ## Looking for Future Appointments
-
-    For finding future appointments we are relying on `AppointmentsFinder`. More
-    explictly we'll use the method `FindAvailableAppointments` to do the hard
-    work. `FindAvailableAppointmets` just filter in all the appointments that
-    require to be sent.
-
-    Now, the obvious question is how do we determine if an appointment needs to
-    be sent or not. To do this job we make out `AppointmentsNotificationPolicy`.
-    Let's have a look on its implementation.
-
-.step(data-title="Which Appointments Needs to be Sent",
-data-file="AppointmentReminders.Web/Domain/AppointmentsNotificationPolicy.cs",
-data-language="c#", data-highlight="6-30")
-  :markdown
-    ## Which Appointments Require to be Sent
-
-    The responsability of this class is to figure out if an appointment has to
-    be sent based on the appointments time.
-
-    There one constraint, we want to sent the appointment 30 minutes before of
-    the event.
-
-    The idea is so simple, get the appointment's time, and substract 30 minutes
-    from that time. If the reminder time is equal to the **current local time**
-    then the appointment is elegible to be sent. Easy peasy, right?
-
-    ... wait! We should be aware of the timezone. Let's see how to deal with
-    this particular problem.
-
-.step(data-title="Dealing with Different Timezones",
-data-file="AppointmentReminders.Web/Domain/TimeConverter.cs",
-data-language="c#", data-highlight="10-19")
-  :markdown
-    ## Dealing with Different Timezones
-    Let me introduce you `TimeConverter`, this class only knows how to convert
-    any given time into the local time. You may be wondering, why?
-
-    Let's say there is an appointment like this:
-
-    ```
-    >> Appointment
-       Time: 12:00 PM
-       Timezone: Pacific Standard Time
-    ```
-
-    Now, let's imagine that our application is running in some computer located
-    somewhere in Central Standard Time.
-
-    ```
-    >>  Application (Appointment Reminders)
-       Current Local Time: 2:00 PM
-       Timezone: Central Standard Time
-    ```
-
-    Both times are equivalent, if we translate them to
-    [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) the
-    appointment time and the application time are the same.
-
-    So, the method `ToLocalTime` takes any given time and a timezone, and
-    translate that time to the application local time.
-
-    We're almost done.
-
-.step(data-title="The Job",
-data-file="AppointmentReminders.Web/Workers/SendNotificationsJob.cs",
-data-language="c#", data-highlight="15-23")
-  :markdown
-    ## The Job
-
-    Or more explicitly the `SendNotificationsJob`, its public interface only
-    have a method `Execute`, this method finds the available appointments by
-    using `AppointmentsFinder` and send them using
-    `Domain.Twilio.RestClient`.
-
-    As you can figure out `Domain.Twilio.RestClient` is simply a wrapper around
-    [Twilio Rest API](https://www.twilio.com/docs/api/rest/sending-sms).
-
-    Let's see the final piece of our puzzle.
-
-.step(data-title="The Wrapper for the Rest Client",
-data-file="AppointmentReminders.Web/Domain/Twilio/RestClient.cs",
-data-language="c#", data-highlight="6-23")
-  :markdown
-    ## The Wrapper for the Rest Client
-
-    The idea behind this wrapper is to ease the initialization of the API from
-    the job perspective and to *wrap* the method `SendSmsMessage`.
-
-    The values to setup the rest client are pulled from the
-    [Web.config](https://github.com/TwilioDevEd/appointment-reminders-csharp/blob/a9e75048d78216d2afd432de0080a175e53f6c34/AppointmentReminders.Web/Web.config.sample#L19-L21)
-    file.
+    This class is responsible for reading our Twilio account credentials from
+    `Web.config`, and using the Twilio REST API to actually send out a
+    notification to our users.  We also need a [Twilio number](https://www.twilio.com/user/account/phone-numbers/incoming)
+    to use as the sender for the text message. Actually sending the message is
+    a single line of code!
 
     ## All Done
 
-    As you saw, some minor configuration and we're ready to get automated
-    appointment reminders firing with Twilio. Be sure to check out the project
-    buttons above to download the source code for this application, view it on
-    GitHub.
+    And with a little code and a dash of configuration, we're ready to get automated
+    appointment reminders firing in our application. Good work!
 
-    We'd also love to hear your feedback on this tutorial - [please reach out to
+    As always, we'd love to hear your feedback on this tutorial. [Please reach out to
     us](mailto:help@twilio.com) with any questions you might have.  Thanks for
     checking out the tutorial!

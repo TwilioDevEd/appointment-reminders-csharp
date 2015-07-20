@@ -22,22 +22,15 @@ data-highlight='34-40')
   :markdown
     ## Showing a List of Appointments
 
-    At the controller level, all we'll do is get a list of all the appointments
-    in the database and rendering them with a view. We should also add a prompt
-    if there aren't any appointments, since this demo relies on there being at
-    least one appointment in the future.
+    At the controller level, we'll get a list of all the appointments
+    in the database and render them with a view. We also add a prompt
+    if there aren't any appointments, so the admin user can create one.
 
     Let's go back to the template to see our list of appointments.
 
-    One note: Probably you already noticed we're using the infamous repository
-    pattern, we're using this mostly because we want to make this project
-    testeable. If you're not familiar with this pattern, we highly recommend you
-    to check this [post](http://www.codeproject.com/Articles/526874/Repositorypluspattern-cplusdoneplusright)
-    out.
-
 .step(data-title='View all Appointments',
 data-file='AppointmentReminders.Web/Views/Appointments/Index.cshtml',
-data-mode="html", data-highlight="47-52")
+data-mode="html", data-highlight="29-55")
   :markdown
     ## View All Appointments
 
@@ -55,35 +48,9 @@ data-mode="html", data-highlight="47-52")
     * `/Appointments/Edit/(some ID)` for edit
     * `/Appointments/Delete/(some ID)` for delete
 
-    For delete action we use a confirmation message by adding an *onlick*
-    statement, explicitly this `onclick = "return confirm('Are you sure?');"`
-    so that when the user attempts to delete an appointment a javascript
-    confirmation will be shown, if the user confirms the action then the
-    appointment is deleted, otherwise no action will be taken.
+    `AppointmentsController.cs` contains methods which handle both the edit and delete
+    operations.
 
-    Now let's take a look at what happens when an appointment is actually deleted.
-
-.step(data-title='Looking up an Appointment',
-data-file='AppointmentReminders.Web/Controllers/AppointmentsController.cs',
-data-highlight='41-56')
-  :markdown
-    ## Looking up the Appointment
-
-    In this controller we need to pull up an appointment record and then delete
-    it. Let's take a look at how we're grabbing the appointment first.
-
-    There is some standard check going over here, if there is not an ID to look
-    for, then the controller responds `Bad Request`, in the other hand if an ID
-    is passed but it doesn't match with any of the appointments in the
-    database then the controller responds `Not Found`.
-
-.step(data-title='Deleting an Appointment',
-data-file='AppointmentReminders.Web/Controllers/AppointmentsController.cs',
-data-highlight="121-125")
-  :markdown
-    ## Deleting an Appointment
-
-    Now that we have the appointment, we simply need to call `Delete` on it.
-
-    Now that we can interact with our appointments, let's dive into sending
-    reminders when an appointment is coming up.
+    Now that we have the ability to create, view, edit, and delete appointments,
+    we can dig into the fun part - scheduling a recurring job that will send out
+    reminders via SMS when an appointment is coming up!
