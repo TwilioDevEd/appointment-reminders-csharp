@@ -116,8 +116,8 @@ namespace AppointmentReminders.Web.Controllers
             return View(appointment);
         }
 
-        // GET: Appointments/Delete/5
-        [HttpGet]
+        // DELETE: Appointments/Delete/5
+        [HttpDelete]
         public ActionResult Delete(int id)
         {
             _repository.Delete(id);

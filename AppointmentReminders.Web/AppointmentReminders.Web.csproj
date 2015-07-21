@@ -146,6 +146,7 @@
     <Compile Include="Domain\TimeConverter.cs" />
     <Compile Include="Domain\Twilio\RestClient.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Models\Repository\AppointmentRepository.cs" />
     <Compile Include="Models\Repository\IAppointmentRepository.cs" />
     <Compile Include="Workers\SendNotificationsJob.cs" />

@@ -1,4 +1,5 @@
-﻿@model AppointmentReminders.Web.Models.Appointment
+﻿@using AppointmentReminders.Web.Extensions
+@model AppointmentReminders.Web.Models.Appointment
 
 <div class="page-header">
     <h1>Appointment</h1>
@@ -10,14 +11,13 @@
     <dt><strong>@Html.DisplayNameFor(x => x.PhoneNumber)</strong></dt>
     <dd>@Html.DisplayFor(x => x.PhoneNumber)</dd>
     <dt><strong>@Html.DisplayNameFor(x => x.Time)</strong></dt>
-    @* TODO: Add helper to display the data properly *@
     <dd>@Html.DisplayFor(x => x.Time)</dd>
 </dl>
 
-@Html.ActionLink("Back", "Index", new {Controller = "Appointments"}, new {@class = "btn btn-default"})
-@Html.ActionLink("Edit","Edit", new { Controller = "Appointments", id = Model.Id }, new { @class = "btn btn-default" })
-@Html.ActionLink(
-    "Delete",
-    "Delete",
-    new { Controller = "Appointments", id = Model.Id },
+<div class="form-inline">
+    @Html.ActionLink("Back", "Index", new { Controller = "Appointments" }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = Model.Id }, new { @class = "btn btn-default" })
+    @Html.DeleteLink("Delete", "Appointments",
+    new { id = Model.Id },
     new { @class = "btn btn-danger", onclick = "return confirm('Are you sure?');" })
+</div>

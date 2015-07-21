@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AppointmentReminders.Web.Models.Appointment>
+﻿@using AppointmentReminders.Web.Extensions
+@model IEnumerable<AppointmentReminders.Web.Models.Appointment>
 
 <div class="page-header">
     <h1>Appointments</h1>
@@ -45,10 +46,9 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = item.Id }, new { @class = "btn btn-default btn-xs" })
-            @Html.ActionLink(
-            "Delete",
-            "Delete",
-            new { Controller = "Appointments", id = item.Id },
+
+            @Html.DeleteLink("Delete", "Appointments", 
+            new { id = item.Id },
             new { @class = "btn btn-danger btn-xs", onclick = "return confirm('Are you sure?');" })
         </td>
     </tr>
