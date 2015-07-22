@@ -14,10 +14,9 @@
     <dd>@Html.DisplayFor(x => x.Time)</dd>
 </dl>
 
-<div class="form-inline">
-    @Html.ActionLink("Back", "Index", new { Controller = "Appointments" }, new { @class = "btn btn-default" })
-    @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = Model.Id }, new { @class = "btn btn-default" })
-    @Html.DeleteLink("Delete", "Appointments",
-    new { id = Model.Id },
-    new { @class = "btn btn-danger", onclick = "return confirm('Are you sure?');" })
-</div>
+
+@Html.ActionLink("Back", "Index", new { Controller = "Appointments" }, new { @class = "btn btn-default" })
+@Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = Model.Id }, new { @class = "btn btn-default" })
+@Html.DeleteLink("Delete", "Appointments",
+new { id = Model.Id },
+new { @class = "btn btn-danger", onclick = "return confirm('Are you sure?');" })

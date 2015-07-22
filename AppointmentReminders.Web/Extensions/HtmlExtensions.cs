@@ -18,6 +18,7 @@ namespace AppointmentReminders.Web.Extensions
             var form = new TagBuilder("form");
             form.Attributes.Add("action", url);
             form.Attributes.Add("method", "post");
+            form.Attributes.Add("style", "display:inline");
 
             var formControls = helper.HttpMethodOverride(HttpVerbs.Delete).ToString();
 
