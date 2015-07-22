@@ -1,30 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net.Mime;
-using System.Web;
+using Microsoft.Ajax.Utilities;
 
 namespace AppointmentReminders.Web.Models
 {
     public class Appointment
     {
-        // Appointment.Remindertime
         public static int ReminderTime = 30;
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
-        [Display(Name = "Phone number")]
-        [Required]
-        [Phone]
+
+        [Required, Phone, Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
+
         [Required]
         public DateTime Time { get; set; }
 
+        [Required]
+        public string Timezone { get; set; }
+
         [Display(Name = "Created at")]
         public DateTime CreatedAt { get; set; }
-
-        // TODO: Add callback to setup reminder
-        // This processing should be done asynchronously
     }
 }

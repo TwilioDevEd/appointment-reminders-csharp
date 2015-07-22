@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AppointmentReminders.Web.Models.Appointment>
+﻿@using AppointmentReminders.Web.Extensions
+@model IEnumerable<AppointmentReminders.Web.Models.Appointment>
 
 <div class="page-header">
     <h1>Appointments</h1>
@@ -29,7 +30,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Id)
+            @Html.ActionLink(item.Id.ToString(), "Details", new {Controller = "Appointments", id = item.Id})
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
@@ -44,8 +45,11 @@
             @Html.DisplayFor(modelItem => item.CreatedAt)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments" }, new { @class = "btn btn-default btn-xs" })
-            <a class="btn btn-xs btn-danger" href="#">Delete</a>
+            @Html.ActionLink("Edit", "Edit", new { Controller = "Appointments", id = item.Id }, new { @class = "btn btn-default btn-xs" })
+
+            @Html.DeleteLink("Delete", "Appointments", 
+            new { id = item.Id },
+            new { @class = "btn btn-danger btn-xs", onclick = "return confirm('Are you sure?');" })
         </td>
     </tr>
 }
