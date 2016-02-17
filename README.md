@@ -5,6 +5,8 @@
 
 This example demonstrates how to use Twilio to create automatic appointment reminders for your business users.
 
+[Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/appointment-reminders/csharp/mvc)!
+
 ## Running Locally
 
 To run this project locally you'll need to move/rename `AppointmentReminders.Web/Web.config.sample` to `AppointmentReminders.Web/Web.config`.
