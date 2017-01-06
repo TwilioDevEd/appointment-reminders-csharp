@@ -1,3 +1,7 @@
+<a href="https://www.twilio.com">
+  <img src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg" alt="Twilio" width="250" />
+</a>
+
 [![Build status](https://ci.appveyor.com/api/projects/status/qd3q5801n57givny?svg=true)](https://ci.appveyor.com/project/acamino/appointment-reminders-csharp)
 
 
