@@ -87,7 +87,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="Twilio, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Twilio.5.0.0-rca4\lib\net35\Twilio.dll</HintPath>
+      <HintPath>..\packages\Twilio.5.0.0\lib\net35\Twilio.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
