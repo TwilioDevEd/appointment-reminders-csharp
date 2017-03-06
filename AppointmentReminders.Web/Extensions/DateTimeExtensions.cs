@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.Ajax.Utilities;
+using System.Globalization;
 
 namespace AppointmentReminders.Web.Extensions
 {
@@ -10,7 +7,7 @@ namespace AppointmentReminders.Web.Extensions
     {
         public static string ToCustomDateString(this DateTime dateTime)
         {
-            return dateTime.ToString("MM/dd/yyyy hh:mm tt");
+            return dateTime.ToString("MM/dd/yyyy hh:mm tt", new CultureInfo("en-US"));
         }
     }
 }
