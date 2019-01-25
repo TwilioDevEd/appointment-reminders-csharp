@@ -2,14 +2,13 @@
   <img src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg" alt="Twilio" width="250" />
 </a>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/qd3q5801n57givny?svg=true)](https://ci.appveyor.com/project/acamino/appointment-reminders-csharp)
-
+[![Build status](https://ci.appveyor.com/api/projects/status/github/TwilioDevEd/appointment-reminders-csharp?svg=true)](https://ci.appveyor.com/api/projects/status/github/TwilioDevEd/appointment-reminders-csharp)
 
 ## Apointment Reminders in ASP.NET MVC
 
 This example demonstrates how to use Twilio to create automatic appointment reminders for your business users.
 
-[Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/appointment-reminders/csharp/mvc)!
+[Read the full tutorial here](https://www.twilio.com/docs/sms/tutorials/appointment-reminders-csharp-mvc)!
 
 ## Running Locally
 
