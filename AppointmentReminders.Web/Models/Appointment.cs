@@ -6,7 +6,7 @@ namespace AppointmentReminders.Web.Models
 {
     public class Appointment
     {
-        public static int ReminderTime = 30;
+        public static int ReminderTime = 1;
         public int Id { get; set; }
 
         [Required]
