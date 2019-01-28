@@ -20,7 +20,9 @@ namespace AppointmentReminders.Web.Domain
                 .AddMinutes(- Appointment.ReminderTime); // Notify our appointment attendee
                                                          // X minutes before the appointment time
 
-            return currentTime.ToString("MM/dd/yyyy HH:mm") == reminderLocalTime.ToString("MM/dd/yyyy HH:mm");
+            string formattedCurrentTime = currentTime.ToString("MM/dd/yyyy HH:mm");
+            string formattedLocalTime = reminderLocalTime.ToString("MM/dd/yyyy HH:mm");
+            return formattedCurrentTime == formattedLocalTime;
         }
 
         private DateTime GetAppointmentLocalTime()

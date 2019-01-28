@@ -28,6 +28,7 @@ namespace Appointments.Web.Tests.Domain
 
             var currentTime = new DateTime(2015, 7, 15, 11, 30, 00);
             var availableAppointments = appointmentsFinder.FindAvailableAppointments(currentTime);
+            var appts = repository.FindAll();
 
             CollectionAssert.Contains(availableAppointments, appointment);
         }
