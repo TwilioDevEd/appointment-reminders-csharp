@@ -19,6 +19,7 @@ namespace AppointmentReminders.Web.Domain
 
         public IList<Appointment> FindAvailableAppointments(DateTime currentTime)
         {
+            var appts = _repository.FindAll();
             var availableAppointments = _repository.FindAll()
                 .Where(appointment =>
                     new AppointmentsNotificationPolicy(
