@@ -2,7 +2,7 @@
   <img src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg" alt="Twilio" width="250" />
 </a>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/github/TwilioDevEd/appointment-reminders-csharp?svg=true)](https://ci.appveyor.com/api/projects/status/github/TwilioDevEd/appointment-reminders-csharp)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/TwilioDevEd/appointment-reminders-csharp?svg=true)](https://ci.appveyor.com/project/TwilioDevEd/appointment-reminders-csharp)
 
 ## Apointment Reminders in ASP.NET MVC
 
