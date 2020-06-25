@@ -1,0 +1,33 @@
+name: NetFx
+
+on:
+  push:
+    branches: [ master, next ]
+  pull_request:
+    branches: [ master, next ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Code
+
+    - name: Setup MSBuild Path
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+
+    - name: Restore NuGet Packages
+      run: nuget restore AppointmentReminders.sln
+
+    - name: Set up local configuration
+      run: copy "AppointmentReminders.Web\Web.config.sample" "AppointmentReminders.Web\Web.config"
+
+    - name: Build Web App
+      run: msbuild AppointmentReminders.sln /verbosity:minimal
+
+    - name: Run Tests with NUnit Console
+      run: .\packages\NUnit.ConsoleRunner.3.11.1\tools\nunit3-console Appointments.Web.Tests\bin\Debug\Appointments.Web.Tests.dll
