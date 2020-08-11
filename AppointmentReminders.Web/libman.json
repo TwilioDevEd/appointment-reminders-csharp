@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "bootstrap@3.4.1",
+      "destination": "Scripts/lib",
+      "files": [
+        "dist/css/bootstrap.min.css",
+        "dist/css/bootstrap.css.map",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.min.js",
+        "dist/js/bootstrap.js",
+        "dist/fonts/glyphicons-halflings-regular.woff2"
+      ]
+    },
+    {
+      "library": "jquery@3.5.1",
+      "destination": "Scripts/lib/dist/js/",
+      "files": [
+        "jquery.min.js",
+        "jquery.js"
+      ]
+    },
+    {
+      "library": "bootstrap-datetimepicker@4.17.47",
+      "destination": "Scripts/lib/dist/",
+      "files": [
+        "js/bootstrap-datetimepicker.min.js",
+        "css/bootstrap-datetimepicker.css",
+        "css/bootstrap-datetimepicker.min.css"
+      ]
+    },
+    {
+      "library": "moment.js@2.27.0",
+      "destination": "Scripts/lib/dist/js/",
+      "files": [
+        "moment.js",
+        "moment.min.js",
+        "moment.min.js.map"
+      ]
+    }
+  ]
+}
