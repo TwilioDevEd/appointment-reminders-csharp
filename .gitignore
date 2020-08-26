@@ -204,3 +204,7 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# App specific files
+AppointmentReminders.Web/Web.config
+AppointmentReminders.Web/Scripts/lib/*

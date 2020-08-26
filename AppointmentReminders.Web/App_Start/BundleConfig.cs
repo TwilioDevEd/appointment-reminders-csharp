@@ -9,33 +9,21 @@ namespace AppointmentReminders.Web
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
-
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                    "~/Scripts/lib/dist/js/jquery.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/form").Include(
-            "~/Scripts/common/form.js"));
+                    "~/Scripts/lib/dist/js/bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datetime").Include(
-            "~/Scripts/moment*",
-            "~/Scripts/bootstrap-datetimepicker*",
-            "~/Scripts/common/datetimepicker-init.js"));
+                    "~/Scripts/lib/dist/js/moment.js",
+                    "~/Scripts/lib/dist/js/bootstrap-datetimepicker.min.js",
+                    "~/Scripts/common/datetimepicker-init.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css"));
+                    "~/Scripts/lib/dist/css/bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/Content/datetime").Include(
-                      "~/Content/bootstrap-datetimepicker*"));
+                    "~/Scripts/lib/dist/css/bootstrap-datetimepicker.css"));
         }
     }
 }

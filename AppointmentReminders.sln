@@ -1,11 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminders.Web", "AppointmentReminders.Web\AppointmentReminders.Web.csproj", "{7ABB1C68-BE54-4754-91BD-4438DFBB3A66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.Web.Tests", "Appointments.Web.Tests\Appointments.Web.Tests.csproj", "{041E7DF9-03FB-439C-A0FE-9539524C8BA5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7BFA006C-9B70-491D-96DF-AF6DF4BE8669}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.mergify.yml = .mergify.yml
+		appveyor.yml = appveyor.yml
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A14C067-3B75-45C6-97AF-7F9E2D9CD81D}
 	EndGlobalSection
 EndGlobal
