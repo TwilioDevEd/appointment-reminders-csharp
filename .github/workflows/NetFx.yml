@@ -18,13 +18,13 @@ jobs:
       uses: microsoft/setup-msbuild@v1
 
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
+      uses: NuGet/setup-nuget@v1
 
     - name: Restore NuGet Packages
       run: nuget restore AppointmentReminders.sln
 
     - name: Set up local configuration
-      run: copy "AppointmentReminders.Web\Web.config.sample" "AppointmentReminders.Web\Web.config"
+      run: copy "AppointmentReminders.Web\Local.config.example" "AppointmentReminders.Web\Local.config"
 
     - name: Build Web App
       run: msbuild AppointmentReminders.sln /verbosity:minimal
