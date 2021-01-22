@@ -206,5 +206,5 @@ FakesAssemblies/
 *.opt
 
 # App specific files
-AppointmentReminders.Web/Web.config
+AppointmentReminders.Web/Local.config
 AppointmentReminders.Web/Scripts/lib/*
