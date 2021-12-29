@@ -1,0 +1,111 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/AppointmentReminders.Web"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: Microsoft.IdentityModel.JsonWebTokens
+    versions:
+    - 6.10.0
+    - 6.10.1
+    - 6.10.2
+    - 6.9.0
+  - dependency-name: Microsoft.IdentityModel.Logging
+    versions:
+    - 6.10.0
+    - 6.10.1
+    - 6.10.2
+    - 6.9.0
+  - dependency-name: Microsoft.IdentityModel.Tokens
+    versions:
+    - 6.10.0
+    - 6.10.1
+    - 6.10.2
+    - 6.9.0
+  - dependency-name: System.IdentityModel.Tokens.Jwt
+    versions:
+    - 6.10.0
+    - 6.10.1
+    - 6.10.2
+    - 6.9.0
+  - dependency-name: Hangfire
+    versions:
+    - 1.7.20
+    - 1.7.21
+  - dependency-name: Hangfire.SqlServer
+    versions:
+    - 1.7.19
+    - 1.7.20
+    - 1.7.21
+  - dependency-name: Hangfire.Core
+    versions:
+    - 1.7.19
+    - 1.7.20
+    - 1.7.21
+  - dependency-name: JWT
+    versions:
+    - 8.0.0
+    - 8.1.0
+    - 8.1.2
+    - 8.1.3
+    - 8.1.4
+    - 8.1.5
+    - 8.1.6
+  - dependency-name: Twilio
+    versions:
+    - 5.53.1
+    - 5.54.0
+    - 5.55.0
+    - 5.56.0
+    - 5.57.0
+    - 5.58.0
+- package-ecosystem: nuget
+  directory: "/Appointments.Web.Tests"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: Microsoft.IdentityModel.Tokens
+    versions:
+    - 6.10.0
+    - 6.10.1
+    - 6.10.2
+    - 6.9.0
+  - dependency-name: System.IdentityModel.Tokens.Jwt
+    versions:
+    - 6.10.0
+    - 6.10.1
+    - 6.10.2
+    - 6.9.0
+  - dependency-name: Microsoft.IdentityModel.JsonWebTokens
+    versions:
+    - 6.10.0
+    - 6.10.1
+    - 6.10.2
+    - 6.9.0
+  - dependency-name: JWT
+    versions:
+    - 8.0.0
+    - 8.1.0
+    - 8.1.2
+    - 8.1.3
+    - 8.1.4
+    - 8.1.5
+    - 8.1.6
+  - dependency-name: Twilio
+    versions:
+    - 5.53.1
+    - 5.54.0
+    - 5.55.0
+    - 5.56.0
+    - 5.57.0
+    - 5.58.0
+  - dependency-name: NUnit
+    versions:
+    - 3.13.0
+    - 3.13.1
+  - dependency-name: Moq
+    versions:
+    - 4.16.0
